@@ -1053,7 +1053,7 @@
         };
         window.gameState = gameState;
 
-        // Memory images prefer local files under /memories and fall back to built-in placeholders
+        // Memory images prefer local files from the relative memories/ folder and fall back to built-in placeholders
         const memoryFolderImages = Array.from(
             { length: gameState.memoryCosts.length },
             (_, idx) => `memories/memory-${idx + 1}.jpg`

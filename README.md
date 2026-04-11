@@ -2,4 +2,4 @@
 
 ## Memories
 
-Add your memory photos under `memories/memory-<index>.jpg` (starting at 1). The app will load these local files for each unlocked slot and fall back to the built-in placeholders if a file is missing.
+Add your memory photos under `memories/memory<index>.jpg` (starting at 1). For each unlocked slot, the app will load the local file if present; if it is missing, the app uses a built-in placeholder where one is defined, otherwise it shows the "No Image Set" text placeholder.
