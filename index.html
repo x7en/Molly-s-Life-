@@ -1053,8 +1053,12 @@
         };
         window.gameState = gameState;
 
-        // Memory images (placeholders - user can add real photos as base64)
-        const memoryImages = [
+        // Memory images prefer local files under /memories and fall back to built-in placeholders
+        const memoryFolderImages = Array.from(
+            { length: gameState.memoryCosts.length },
+            (_, idx) => `memories/memory-${idx + 1}.jpg`
+        );
+        const fallbackMemoryImages = [
             'https://github.com/user-attachments/assets/2aad0e45-32cf-4ba7-863e-cdabbf06ca33',
             'https://github.com/user-attachments/assets/ddb5ab2d-c02c-426d-a493-1ae18044bed6',
             'https://github.com/user-attachments/assets/bd140540-fa15-4aa2-81ca-da2a6c5e61c5',
@@ -1208,17 +1212,31 @@
             const grid = document.getElementById('memoriesGrid');
             grid.innerHTML = '';
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < gameState.memoryCosts.length; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'memory-slot';
 
                 if (gameState.unlockedMemories.includes(i)) {
                     slot.classList.add('unlocked');
-                    if (memoryImages[i]) {
-                        slot.innerHTML = `<img src="${memoryImages[i]}" class="memory-image" alt="Memory ${i + 1}">`;
-                    } else {
-                        slot.innerHTML = `<span class="memory-placeholder">No Image Set</span>`;
-                    }
+                    const fallbackSrc = fallbackMemoryImages[i];
+                    const img = document.createElement('img');
+                    img.className = 'memory-image';
+                    img.alt = `Memory ${i + 1}`;
+                    img.loading = 'lazy';
+
+                    let triedFallback = false;
+                    img.onerror = () => {
+                        if (triedFallback || !fallbackSrc) {
+                            img.onerror = null;
+                            slot.innerHTML = `<span class="memory-placeholder">No Image Set</span>`;
+                            return;
+                        }
+                        triedFallback = true;
+                        img.src = fallbackSrc;
+                    };
+
+                    img.src = memoryFolderImages[i];
+                    slot.appendChild(img);
                 } else {
                     slot.classList.add('locked');
                     slot.dataset.index = i;
