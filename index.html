@@ -1056,6 +1056,9 @@
         };
         window.gameState = gameState;
 
+        // Session-only unlock flag for the secret code
+        let codeUnlockActive = false;
+
         // Memory images prefer local files from the relative memories/ folder and fall back to built-in placeholders
         const memoryFolderImages = Array.from(
             { length: gameState.memoryCosts.length },
@@ -1131,6 +1134,7 @@
 
         // Load game from localStorage
         function loadGame() {
+            codeUnlockActive = false;
             const saved = localStorage.getItem('mollyGame');
             if (saved) {
                 const parsed = JSON.parse(saved);
@@ -1227,7 +1231,8 @@
                 const slot = document.createElement('div');
                 slot.className = 'memory-slot';
 
-                if (gameState.unlockedMemories.includes(i)) {
+                const unlocked = codeUnlockActive || gameState.unlockedMemories.includes(i);
+                if (unlocked) {
                     slot.classList.add('unlocked');
                     const fallbackSrc = fallbackMemoryImages[i];
                     const videoSrc = memoryVideoFiles[i];
@@ -1353,18 +1358,16 @@
         function unlockAllMemories() {
             const totalMemories = gameState.memoryCosts.length;
             const allMemories = Array.from({ length: totalMemories }, (_, i) => i);
-            const alreadyUnlocked = allMemories.every(idx => gameState.unlockedMemories.includes(idx));
+            const alreadyUnlocked = codeUnlockActive || allMemories.every(idx => gameState.unlockedMemories.includes(idx));
 
             if (alreadyUnlocked) {
                 showToast('All memories already unlocked.');
                 return;
             }
 
-            gameState.unlockedMemories = allMemories;
-            saveGame();
-            updateUI();
+            codeUnlockActive = true;
             renderMemories();
-            showToast('All memories unlocked!');
+            showToast('All memories unlocked for this session!');
         }
 
         function handleMemoryCodeSubmit(event) {
@@ -1562,6 +1565,8 @@
                 performAction,
                 buyItem,
                 unlockMemory,
+                unlockAllMemories,
+                handleMemoryCodeSubmit,
                 renderMemories,
                 renderRoomItems,
                 updateUI,
