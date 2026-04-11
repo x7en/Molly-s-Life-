@@ -988,6 +988,7 @@
             memoryCosts: [0, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000],
             roomItems: []
         };
+        window.gameState = gameState;
 
         // Memory images (placeholders - user can add real photos as base64)
         const memoryImages = [
@@ -1007,6 +1008,7 @@
             walk: { icon: 'walk', text: 'Molly enjoyed the fresh air!', mood: 10, life: 10, gif: 'walk' },
             bathe: { icon: 'bathe', text: 'Molly is sparkling clean!', life: 15, gif: 'stand' }
         };
+        window.actions = actions;
 
         // Shop items
         const shopItems = {
@@ -1014,6 +1016,7 @@
             mouse: { name: 'Catnip Mouse', stat: 'mood', value: 100 },
             pillow: { name: 'Cloud Pillow', stat: 'rest', value: 100 }
         };
+        window.shopItems = shopItems;
 
         // SVG paths for icons
         const iconPaths = {
@@ -1377,7 +1380,23 @@
         }
 
         // Start the game
-        init();
+        if (!window.__TEST__) {
+            init();
+        } else {
+            window.__TEST_API = {
+                init,
+                loadGame,
+                saveGame,
+                applyOfflineDecay,
+                performAction,
+                buyItem,
+                unlockMemory,
+                renderMemories,
+                renderRoomItems,
+                updateUI,
+                switchSection
+            };
+        }
     </script>
 </body>
 </html>
