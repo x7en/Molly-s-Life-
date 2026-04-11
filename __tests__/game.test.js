@@ -180,5 +180,23 @@ describe('game logic', () => {
             expect(firstLocked.querySelector('img')).toBeNull();
             expect(firstLocked.querySelector('.memory-cost')).not.toBeNull();
         });
+
+        test('falls back to a video source when provided for a memory slot', () => {
+            window.gameState.unlockedMemories = [17];
+            api.renderMemories();
+
+            const slots = document.querySelectorAll('#memoriesGrid .memory-slot');
+            const slot = slots[17];
+            const img = slot.querySelector('img');
+            expect(img).not.toBeNull();
+
+            // Simulate both local image attempts failing so the video is used
+            img.onerror();
+            img.onerror();
+
+            const video = slot.querySelector('video');
+            expect(video).not.toBeNull();
+            expect(video.src).toContain('memories/memory-18.mp4');
+        });
     });
 });

@@ -1048,7 +1048,10 @@
             },
             lastUpdate: Date.now(),
             unlockedMemories: [0],
-            memoryCosts: [0, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000],
+            memoryCosts: [
+                0, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500,
+                5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000
+            ],
             roomItems: []
         };
         window.gameState = gameState;
@@ -1062,12 +1065,16 @@
             { length: gameState.memoryCosts.length },
             (_, idx) => `memories/memory${idx + 1}.jpg`
         );
+        const memoryVideoFiles = Array.from(
+            { length: gameState.memoryCosts.length },
+            (_, idx) => (idx === gameState.memoryCosts.length - 1 ? `memories/memory-${idx + 1}.mp4` : null)
+        );
         const fallbackMemoryImages = [
             'https://github.com/user-attachments/assets/2aad0e45-32cf-4ba7-863e-cdabbf06ca33',
             'https://github.com/user-attachments/assets/ddb5ab2d-c02c-426d-a493-1ae18044bed6',
             'https://github.com/user-attachments/assets/bd140540-fa15-4aa2-81ca-da2a6c5e61c5',
             'https://github.com/user-attachments/assets/98610b79-fc33-4160-8f3b-d825e45749db',
-            null, null, null, null, null, null
+            null, null, null, null, null, null, null, null, null, null, null, null, null, null
         ];
 
         const MEMORY_UNLOCK_CODE = 'ayeshalovesmolly';
@@ -1223,6 +1230,7 @@
                 if (gameState.unlockedMemories.includes(i)) {
                     slot.classList.add('unlocked');
                     const fallbackSrc = fallbackMemoryImages[i];
+                    const videoSrc = memoryVideoFiles[i];
                     const img = document.createElement('img');
                     img.className = 'memory-image';
                     img.alt = `Memory ${i + 1}`;
@@ -1231,14 +1239,43 @@
                     const srcCandidates = [memoryFolderImages[i], legacyMemoryFolderImages[i]].filter(Boolean);
                     let candidateIndex = 0;
                     let triedFallback = false;
+                    let videoTried = false;
+
+                    const mountImage = () => {
+                        if (!slot.contains(img)) {
+                            slot.innerHTML = '';
+                            slot.appendChild(img);
+                        }
+                    };
                     const setNextSource = () => {
                         if (candidateIndex < srcCandidates.length) {
+                            mountImage();
                             img.src = srcCandidates[candidateIndex++];
                             return;
                         }
                         if (!triedFallback && fallbackSrc) {
                             triedFallback = true;
+                            mountImage();
                             img.src = fallbackSrc;
+                            return;
+                        }
+                        if (videoSrc && !videoTried) {
+                            videoTried = true;
+                            const video = document.createElement('video');
+                            video.className = 'memory-image';
+                            video.controls = true;
+                            video.loop = true;
+                            video.muted = true;
+                            video.playsInline = true;
+                            video.onerror = () => {
+                                if (slot.contains(video)) {
+                                    slot.removeChild(video);
+                                }
+                                setNextSource();
+                            };
+                            slot.innerHTML = '';
+                            slot.appendChild(video);
+                            video.src = videoSrc;
                             return;
                         }
                         img.onerror = null;
@@ -1247,7 +1284,6 @@
 
                     img.onerror = setNextSource;
                     setNextSource();
-                    slot.appendChild(img);
                 } else {
                     slot.classList.add('locked');
                     slot.dataset.index = i;
