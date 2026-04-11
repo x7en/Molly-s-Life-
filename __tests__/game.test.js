@@ -99,4 +99,79 @@ describe('game logic', () => {
         expect(window.gameState.unlockedMemories).toContain(1);
         expect(window.gameState.hearts).toBe(1000);
     });
+
+    describe('renderMemories', () => {
+        test('renders one slot per memoryCosts entry', () => {
+            api.renderMemories();
+            const slots = document.querySelectorAll('#memoriesGrid .memory-slot');
+            expect(slots.length).toBe(window.gameState.memoryCosts.length);
+        });
+
+        test('unlocked slot contains an img with the local memories/ src', () => {
+            window.gameState.unlockedMemories = [0];
+            api.renderMemories();
+
+            const img = document.querySelector('#memoriesGrid .memory-slot.unlocked img');
+            expect(img).not.toBeNull();
+            expect(img.src).toContain('memories/memory-1.jpg');
+        });
+
+        test('onerror on unlocked slot with fallback swaps src to fallback URL', () => {
+            // Slot 0 has a built-in fallback URL
+            window.gameState.unlockedMemories = [0];
+            api.renderMemories();
+
+            const img = document.querySelector('#memoriesGrid .memory-slot.unlocked img');
+            expect(img).not.toBeNull();
+
+            // Simulate the local file failing to load
+            img.onerror();
+            expect(img.src).toContain('github.com/user-attachments/assets');
+        });
+
+        test('onerror called twice on unlocked slot with fallback shows text placeholder', () => {
+            // Slot 0 has a built-in fallback URL
+            window.gameState.unlockedMemories = [0];
+            api.renderMemories();
+
+            const slot = document.querySelector('#memoriesGrid .memory-slot.unlocked');
+            const img = slot.querySelector('img');
+
+            // First onerror: switches to fallback URL
+            img.onerror();
+            // Second onerror: fallback also failed → show text placeholder
+            img.onerror();
+
+            expect(slot.querySelector('.memory-placeholder')).not.toBeNull();
+            expect(slot.querySelector('.memory-placeholder').textContent).toBe('No Image Set');
+        });
+
+        test('onerror on unlocked slot without fallback shows text placeholder immediately', () => {
+            // Slot 4 has null fallback
+            window.gameState.unlockedMemories = [0, 1, 2, 3, 4];
+            api.renderMemories();
+
+            const slots = document.querySelectorAll('#memoriesGrid .memory-slot.unlocked');
+            const slot = slots[4];
+            const img = slot.querySelector('img');
+
+            // Single onerror should show placeholder directly (no fallback URL for index 4)
+            img.onerror();
+
+            expect(slot.querySelector('.memory-placeholder')).not.toBeNull();
+            expect(slot.querySelector('.memory-placeholder').textContent).toBe('No Image Set');
+        });
+
+        test('locked slots show a lock icon and cost, not an image', () => {
+            // Only slot 0 is unlocked by default
+            api.renderMemories();
+
+            const lockedSlots = document.querySelectorAll('#memoriesGrid .memory-slot.locked');
+            expect(lockedSlots.length).toBe(window.gameState.memoryCosts.length - 1);
+
+            const firstLocked = lockedSlots[0];
+            expect(firstLocked.querySelector('img')).toBeNull();
+            expect(firstLocked.querySelector('.memory-cost')).not.toBeNull();
+        });
+    });
 });
