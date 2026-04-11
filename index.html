@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Molly's Life</title>
+  <style>
+    @font-face {
+      font-family: "AtariPixel";
+      src: url("data:font/otf;base64,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AhQCGQIeAh8CJAIqAjQCOgJBAkgCUAJYAlwCYQJkAm0CeQJ/AoUCiwKRApcCnQKgAqMCpgKpAqwCrwKyArUCuAK7Ar4CwQLEAscCygLNAtAC0wLWAtkC3ALfAuIC5QLoAusC7gLxAvQC9wL6Av0DAAMDAwYDCQMMAw8DEgMVAxgDGwMeAyEDJAMnAyoDLQMwAzMDNgM5AzwDPwNCA0UDSANLA04DUQNUA1cDWgNdA2ADYwNmA2kDbANvA3IDdQN4A3sDfgOBA4QDhwOKA40DkAOTA5YDmQOcA58DogOlA6gDqwOuA7EDtAO3A7oDvQPAA8MDxgPJA8wDzwPSA9UD2APbA94D4QPkA+cD6gPtA/AD8wP2A/kD/AP/BAIEBQQIBAsEDgQRBBQEFwQaBB0EIgQnBCwEMQQ2BDsEQARFBEkETQRRBFUEWQRdBGEEZQRqBG8EdQR5BH4EgwSLBJMEmwSjBKsEswS7BMMEywTTBNgE3QTiBOcE7ATxBPYE+wUABQUFCgUPBRQFGQUeBSMFKAUtBTIFNwU8BUEFRgVLBVAFdwWBBYs8PDw8U1BBQ0VFWENMQU1BVElPTlFVT1RBVElPTk5VTUJFUkRPTExBUlBFUkNFTlRBTVBFUlNBTkRBUE9TVFJPUEhFTEVGVFJJR0hUQVNURVJJU0tQTFVTQ09NTUFIWVBIRU4tTUlOVVNGVUxMU09MSURVU0RJR0lURElHSVRESUdJVERJR0lURElHSVRESUdJVERJR0lURElHSVRESUdJVERJR0lUQ09MT05TRU1JQ09MT05MRVNTLVRIQU5FUVVBTFNHUkVBVEVSLVRIQU5RVUVTVElPTkNPTU1FUkNJQUxMQVRJTkxBVElOTEFUSU5MQVRJTkxBVElOTEFUSU5MQVRJTkxBVElOTEFUSU5MQVRJTkxBVElOTEFUSU5MQVRJTkxBVElOTEFUSU5MQVRJTkxBVElOTEFUSU5MRUZUVkVSVElDQUxSSUdIVFRJTERFPFBPVU5EREVHUkVFUExVUy1NSU5VU01JRERMRWFvZ29uZWtlb2dvbmVrU2NlZGlsbGFzY2VkaWxsYUxFRlRSSUdIVE5PVExFU1MtVEhBTkdSRUFURVItVEhBTlNZTUJPTFNZTUJPTFNZTUJPTFNZTUJPTFNZTUJPTFNZTUJPTEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWEJPWFVQUEVSTE9XRVJMT1dFUkxPV0VSTE9XRVJMT1dFUkxPV0VSTE9XRVJGVUxMTEVGVExFRlRMRUZUTEVGVExFRlRMRUZUTEVGVFJJR0hUTElHSFRNRURJVU1EQVJLVVBQRVJSSUdIVFFVQURSQU5UUVVBRFJBTlRRVUFEUkFOVFFVQURSQU5UUVVBRFJBTlRRVUFEUkFOVFFVQURSQU5UUVVBRFJBTlRRVUFEUkFOVFFVQURSQU5UQkxBQ0tXSElURUJMQUNLV0hJVEVCTEFDS1dISVRFQkxBQ0tXSElURUJMQUNLV0hJVEVCTEFDS1dISVRFQkxBQ0tXSElURUJMQUNLV0hJVEVCTEFDS1dISVRFQkxBQ0tXSElURUJMQUNLV0hJVEVCTEFDS1dISVRFV0hJVEUiQ29weXJpZ2h0IDE5OTksIDIwMTUgQXRhcmk4MDAgYXV0aG9ycyIiQXRhcmk4MDAiIkF0YXJpODAwIgAAAAGHAYgBiQGKAYsBjAGNAY4BjwGQAZEBkgGTAZQBlQGWAZcBmAGZAZoBmwGcAZ0BngGfAaABoQGiAaMBpAGlAaYBpwGoAakBqgGrAawBrQGuAa8BsAGxAbIBswG0AbUBtgG3AbgBuQG6AbsBvAG9Ab4BvwHAAcEBwgHDAcQBxQHGAccByAHJAcoBywHMAc0BzgHPAdAB0QHSAdMB1AHVAdYB1wHYAdkB2gHbAdwB3QHeAd8B4AHhAeIB4wHkAeUB5gHnAegB6QHqAesB7AHtAe4ArQCKALEAwwDKAM4A0QDVANoAnwDgAOMB7wHwAJEAjgHxAfIB8wH0AfUB9gH3AfgB+QH6AfsB/AH9Af4B/wIAAgECAgIDAgQCBQIGAgcCCAIJAgoCCwIMAg0CDgIPAhACEQISAhMCFAIVAhYCFwIYAhkCGgIbAhwCHQIeAh8CIAIhAiICIwIkAiUCJgInAigCKQIqAisCLAItAi4CLwIwAjECMgIzAjQCNQI2AjcCOAI5AjoCOwI8Aj0CPgI/AkACQQJCAkMCRAJFAkYCRwJIAkkCSgJLAkwCTQJOAk8CUAJRAlICUwJUAlUCVgJXAlgCWQJaAlsCXAJdAl4CXwJgAmECYgJjAmQCZQJmAmcCaAJpAmoCawJsAm0CbgJvAnACcQJyAnMCdAJ1AnYCdwJ4AnkCegJ7AnwCfQJ+An8CgAKBAoICgwKEAoUChgKHAogCiQKKAosCjAKNAo4CjwKQApECkgKTApQClQKWApcCmAKZApoCmwKcAp0CngKfAqACoQKiAqMCpAKlAqYCpwKoAqkCqgKrAqwCrQKuAq8CsAKxArICswK0ArUCtgE/AgABACIASwCYANMBHgEfAT0BWwGyAekCEwJbAnECjwKrAuEDCQMaAzMDSANmA6oD3QQRBEQEfwS5BPUFHgVUBZAFogW0BdAF+QYTBjUGaga1Bv4HKwd0B7oH8ggnCHcIrwjUCR0JRQmVCeAKHQpXCpoK4wsSCzsLiwvNDB0MXwyJDMEM7A0IDTENRQ1kDW8NpQ3eDgYOQg56DqcO6g8jD1QPgg+7D9wQIBBdEI4QyBEDESMRTRF5Eb0R8xI3Em0SrhLiEwYTKBNKE2cTaBO+E/0UMhREFKgVKRVjFc8WHxZVFqUW3BczF28XzRgoGHIYtxjfGVQZjBnDGdQZ5RorGloaiBriGyIbZBu7G/wcUxxzHK0c1h05HUsdaR2MHdsd7R4LHi4efR6gHtYfEB9dH3Yfmx/TIB4gRCB5IL8hDCEsIVQhmiHnIhoiXCKvIvkjYyO9JBYkhySzJOclOiWFJe8mSSajJxQnPCd3J7Qn9ig1KIco2yk0KWIpmCnUKhgqZSq5Kw0raCujK+YsLyyALNotLC2dLf4uXy7ALyAviC/wMGgw4DFfMXgxpDHKMiMyWjK9MvczMTN7M6Qz4zQ5NG40tDTyNRo1ZzWzNfU2WDazNuc3UTe6N/44PTiRONM5IDlqObw6LTqUOrg60TryOxg7PztkO8U71zvwPAQ8HTw7PG48jjzBPO89Mj1ePaI+Cz4qPmQ+sz8cP59APEDzQcRClUMuQ8dEKESJRK9E1UU4RWFFwkZbRntGpEbVRwhHOUfSSDNIzEllSZhJ+0qWStBLA0tIS39LsUvcTBFMP0xcTHlMlkyzTPZNK01bTYRNu03rTgpOKU5ITmdOmk6/TvKLvviDvgG+vvfIvgO+Fvgu+On8Lga+/LYV+IP3yPyDBw75FAQgCveU9xQVIAr7lPsUFSAK95T3FBUgCvsUFiAK95T3FBUgCg75lAQgCvcU9xQVIAr3FPcUFSAK9xT3FBUgCvuUFiAK95T3FBUgCvuUFiAK95T3FBUgCvuUFiAK95T3FBUgCg4O9xT3FAP3FPmUFSAKiwQgCosEIAqLBCAK+xQEIAoO+JT3lAH5lAQgCveU9xQVIAr7lBYgCveU9xQVIAoO+ZQEIAr3lPcUFSAK+5QWIAr3FPcUFSAK9xT3FBUgCvuUFiAK95T3FBUgCvuUFiAK95T3FBUgCvuUFiAK9xT3FBUgCvcU9xQVIAr7lBYgCveU9xQVIAoO9xT6FBUgCvsUFiAKC") format("opentype");
+      font-display: swap;
+    }
+
+    :root {
+      --bg-tile: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAXUlEQVR4nGNUEuH5L8DFxvDh2y8GAS42Bi4OJgYxPi6GV5++MYjxcTEwwQSRJS88eAenGSk2gQkmiCwpwMUGp5nQdaCbyPTq0zcGAwUhBhj94dsvhm8//sFpgiYAAJq/P1XFbYAEAAAAAElFTkSuQmCC');
+      --panel: #2b1912;
+      --panel-soft: #3a2419;
+      --accent: #f6a03d;
+      --accent-2: #f2c572;
+      --text: #fef4d4;
+      --muted: #c9b293;
+      --shadow: #120b07;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background-color: #180f0a;
+      background-image: var(--bg-tile);
+      background-size: 16px 16px;
+      color: var(--text);
+      font-family: 'AtariPixel', 'DejaVu Sans Mono', monospace;
+      letter-spacing: 0.5px;
+      padding: 10px;
+      image-rendering: pixelated;
+    }
+
+    .shell {
+      width: min(430px, 100%);
+      background: linear-gradient(180deg, #2a1a12 0%, #1f130d 100%);
+      border: 3px solid #4c2c1b;
+      box-shadow: 0 12px 0 #0f0804, 0 0 0 6px #332015;
+      border-radius: 10px;
+      padding: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      background: var(--panel);
+      border: 2px solid #4b2d1b;
+      border-radius: 6px;
+      box-shadow: inset 0 2px 0 #3a2315;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
+
+    .heart-counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 6px 8px;
+      background: #3a2419;
+      border: 2px solid #5a3421;
+      border-radius: 6px;
+      box-shadow: inset 0 2px 0 #2a1a12;
+    }
+
+    .heart-counter svg { width: 14px; height: 14px; fill: #ff6d6d; }
+
+    .stats {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stat {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel);
+      border: 2px solid #4b2d1b;
+      border-radius: 6px;
+      padding: 6px;
+      box-shadow: inset 0 2px 0 #3a2315;
+      font-size: 11px;
+    }
+
+    .stat .icon {
+      width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #3c261b;
+      border: 2px solid #5a3421;
+      border-radius: 4px;
+      padding: 2px;
+    }
+
+    .bar {
+      position: relative;
+      height: 10px;
+      background: #20120c;
+      border: 2px solid #4b2d1b;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: var(--value, 50%);
+      background: linear-gradient(90deg, #f6a03d, #ffdf7d);
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.35);
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    .stat.low .bar-fill { background: linear-gradient(90deg, #ff6666, #ff9b71); }
+
+    .stat .value { font-size: 11px; color: var(--muted); }
+
+    .card {
+      background: var(--panel);
+      border: 2px solid #4b2d1b;
+      border-radius: 8px;
+      box-shadow: inset 0 2px 0 #3a2315;
+      padding: 10px;
+    }
+
+    .molly-zone {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .sprite-frame {
+      display: inline-block;
+      padding: 12px;
+      background: #2c1b12;
+      border: 3px solid #4d2d1c;
+      border-radius: 10px;
+      position: relative;
+      box-shadow: inset 0 3px 0 #3a2315, 0 6px 0 #120b07;
+    }
+
+    .sprite-frame::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border: 2px solid #5c3622;
+      border-radius: 12px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    #molly-sprite {
+      width: 128px;
+      height: 128px;
+      image-rendering: pixelated;
+      cursor: pointer;
+      filter: drop-shadow(0 4px 0 #120b07);
+      transition: transform 0.12s ease;
+    }
+
+    #molly-sprite.boop { transform: scale(1.06) translateY(-4px); }
+
+    .tap-hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.6px;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .action-btn {
+      display: grid;
+      place-items: center;
+      gap: 6px;
+      padding: 12px 8px;
+      background: linear-gradient(180deg, #3b2419, #28160f);
+      border: 3px solid #5a3421;
+      border-radius: 10px;
+      box-shadow: inset 0 3px 0 #2b1a11, 0 4px 0 #120b07;
+      color: var(--text);
+      font-size: 11px;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .action-btn:active { transform: translateY(2px); box-shadow: inset 0 1px 0 #2b1a11, 0 2px 0 #0b0503; }
+    .action-btn svg { width: 18px; height: 18px; fill: #f6a03d; }
+
+    .tab { display: none; }
+    .tab.active { display: block; }
+
+    .shop-items {
+      display: grid;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .shop-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 10px;
+      background: var(--panel);
+      border: 2px solid #5b3521;
+      border-radius: 8px;
+      box-shadow: inset 0 2px 0 #3a2315;
+    }
+
+    .shop-card h3 { margin: 0; font-size: 12px; letter-spacing: 0.5px; }
+    .shop-card p { margin: 4px 0 0; font-size: 10px; color: var(--muted); }
+
+    .buy-btn {
+      padding: 8px 10px;
+      background: linear-gradient(180deg, #3f261a, #29170f);
+      border: 2px solid #6a3a23;
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 10px;
+      cursor: pointer;
+      min-width: 84px;
+      text-align: center;
+      box-shadow: inset 0 2px 0 #2b1a11;
+      transition: opacity 0.2s ease, transform 0.1s ease;
+    }
+
+    .buy-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .buy-btn:active:not(:disabled) { transform: translateY(2px); }
+
+    .memories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .memory-card {
+      position: relative;
+      padding: 4px;
+      background: #2c1b12;
+      border: 3px solid #5b3521;
+      border-radius: 8px;
+      box-shadow: inset 0 2px 0 #3a2315;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+    }
+
+    .memory-card img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; filter: saturate(0.95); }
+
+    .memory-card .lock {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(20,12,8,0.8), rgba(20,12,8,0.92));
+      display: grid;
+      place-items: center;
+      color: var(--text);
+      text-align: center;
+      font-size: 10px;
+      padding: 6px;
+      letter-spacing: 0.4px;
+    }
+
+    .memory-card .lock svg { width: 16px; height: 16px; fill: #f6a03d; margin-bottom: 4px; }
+
+    .nav {
+      position: sticky;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+      background: #1a100b;
+      padding: 8px 0 0;
+    }
+
+    .nav-btn {
+      padding: 10px 6px;
+      background: #2c1b12;
+      border: 2px solid #4d2d1c;
+      border-radius: 8px 8px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+    }
+
+    .nav-btn.active { color: var(--text); background: #3a2419; box-shadow: inset 0 2px 0 #2b1a11; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: #3c261b;
+      border: 2px solid #5a3421;
+      border-radius: 999px;
+      font-size: 10px;
+      color: var(--text);
+    }
+
+    .floating {
+      position: absolute;
+      left: 50%;
+      top: 30%;
+      transform: translate(-50%, 0);
+      animation: floatUp 1s ease forwards;
+      pointer-events: none;
+      font-size: 12px;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translate(-50%, 10px); }
+      100% { opacity: 0; transform: translate(-50%, -30px); }
+    }
+
+    .tiny { font-size: 10px; color: var(--muted); margin: 6px 0 0; text-align: center; }
+
+    @media (max-width: 420px) {
+      .shell { padding: 10px; }
+      .actions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #molly-sprite { width: 112px; height: 112px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="title">MOLLY</div>
+      <div class="heart-counter" aria-live="polite">
+        <svg viewBox="0 0 24 24" role="img" aria-label="Hearts"><path d="M12 21s-6.6-4.3-9.2-8.3C.4 10.2.8 6.7 3.3 5c2.5-1.7 5 0 6 1.5C10.3 5 12.8 3.3 15.3 5c2.5 1.7 2.9 5.2.5 7.7C18.6 16.7 12 21 12 21z"/></svg>
+        <span id="love-count">0</span>
+      </div>
+    </header>
+
+    <section class="stats" aria-label="Molly status">
+      <div class="stat" data-stat="food">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 11h16l-1 7H5z" fill="#f6a03d"/><path d="M6 7h12v4H6z" fill="#f2c572"/><path d="M8 6h8v1H8z" fill="#d27d2d"/></svg></div>
+        <div class="bar"><div class="bar-fill"></div></div>
+        <div class="value">100</div>
+      </div>
+      <div class="stat" data-stat="rest">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 11c0-4 3-6 7-6s7 2 7 6v5H5z" fill="#f2c572"/><path d="M7 13h10v2H7z" fill="#d27d2d"/></svg></div>
+        <div class="bar"><div class="bar-fill"></div></div>
+        <div class="value">100</div>
+      </div>
+      <div class="stat" data-stat="mood">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#f6a03d"/><path d="M8 11h1v1H8zm7 0h1v1h-1zm-6 3c1 2 5 2 6 0" stroke="#2b1912" stroke-width="1.4" fill="none"/></svg></div>
+        <div class="bar"><div class="bar-fill"></div></div>
+        <div class="value">100</div>
+      </div>
+      <div class="stat" data-stat="health">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20s-6-4-8-8 0-7 4-7c2.5 0 3.5 1.6 4 2.5.5-.9 1.5-2.5 4-2.5 4 0 6 3 4 7s-8 8-8 8z" fill="#ff7f7f"/></svg></div>
+        <div class="bar"><div class="bar-fill"></div></div>
+        <div class="value">100</div>
+      </div>
+    </section>
+
+    <section id="tab-home" class="tab active" aria-label="Home">
+      <div class="molly-zone card">
+        <div class="sprite-frame">
+          <img id="molly-sprite" alt="Molly sprite" src="" draggable="false">
+          <div id="floating-container"></div>
+        </div>
+        <div class="tap-hint">Tap Molly to gain love</div>
+        <div class="tiny">Actions boost stats and play an animation</div>
+        <div class="actions-grid" aria-label="Care actions">
+          <button class="action-btn" data-action="cuddle">
+            <svg viewBox="0 0 24 24"><path d="M6 12c-1.5-2 0-5 2.5-5S11 9 12 10s2-3 3.5-3S20 10 18 12l-6 7z"/></svg>
+            <span>Cuddle</span>
+          </button>
+          <button class="action-btn" data-action="feed">
+            <svg viewBox="0 0 24 24"><path d="M4 13c0-3 3-5 8-5s8 2 8 5v2H4z"/><path d="M6 16h12v2H6z" fill="#d27d2d"/></svg>
+            <span>Feed</span>
+          </button>
+          <button class="action-btn" data-action="play">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M9 9l6 3-6 3z" fill="#2b1912"/></svg>
+            <span>Play</span>
+          </button>
+          <button class="action-btn" data-action="sleep">
+            <svg viewBox="0 0 24 24"><path d="M5 14c1-3 4-5 7-5s6 2 7 5v3H5z"/><path d="M7 10c0-2 1-3 3-3" stroke="#2b1912" stroke-width="1.4" fill="none"/></svg>
+            <span>Sleep</span>
+          </button>
+          <button class="action-btn" data-action="walk">
+            <svg viewBox="0 0 24 24"><path d="M7 14c2-4 4-6 7-7-1 3-1 6 2 10-3-1-5-1-9 0z"/><path d="M9 10l3-2" stroke="#2b1912" stroke-width="1.3"/></svg>
+            <span>Walk</span>
+          </button>
+          <button class="action-btn" data-action="bathe">
+            <svg viewBox="0 0 24 24"><path d="M6 13c0-3 3-6 6-9 3 3 6 6 6 9a6 6 0 0 1-12 0z"/><path d="M10 14a2 2 0 0 0 4 0" stroke="#2b1912" stroke-width="1.4" fill="none"/></svg>
+            <span>Bathe</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-shop" class="tab" aria-label="Shop">
+      <div class="card">
+        <div class="tiny">Spend hearts to instantly refill Molly's needs</div>
+        <div class="shop-items" id="shop-items"></div>
+      </div>
+    </section>
+
+    <section id="tab-memories" class="tab" aria-label="Memories">
+      <div class="card">
+        <div class="tiny">Earn hearts to unlock real photos of Molly</div>
+        <div class="memories-grid" id="memories-grid"></div>
+      </div>
+    </section>
+
+    <nav class="nav" aria-label="Navigation">
+      <button class="nav-btn active" data-tab="home">Home</button>
+      <button class="nav-btn" data-tab="shop">Shop</button>
+      <button class="nav-btn" data-tab="memories">Memories</button>
+    </nav>
+  </div>
+
+  <script>
+    const SPRITES = {
+      idle: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABZ0lEQVR4nO2WsU7DMBCG/yIEqFLXjixZMmfkAdyOrVQqXiGsLHTpWhbW8BIdGINnVImFuUuWjFkrdS0DnHENsc+lchjyLck5rvufz/5toKXFAxF1d8foo3PStAi2ABF1d8vF8M99TDrcPwcAGnwyy2v76n1ksXWOf8oRQExmObI0QZYm6F/2AQBVWQEAbp/e92IubAGUWVVWiMRItffiz+eLGGGzXnkL8F6Ex8arBEQhn3+UgOIgAqjeAJCliXq3Lc46vEtAmZbXQsV69tTOxWsGevHV11v+S9t+Oxe2DywXQ5zhBgBwHpfq2+ODxN39d9ab9Ur1u5hOneM7S2Cz1cF4Dvn2isF4Xvtbly07FfoeLi5Md2QJ0E0IQO0WtMXmDiEhQY2IbFyncSdsXMBBTngouoMSwWaAFrIsth19J7BmwDxifWPbGRGkBLabEUsA7WvKxLyauWIbQZyQczdkYXq7b9zyL/kAgS2cFqUl1DMAAAAASUVORK5CYII=',
+    };
+
+    const clone = (value) => JSON.parse(JSON.stringify(value));
+
+    const ANIMATIONS = {
+      cuddle: SPRITES.idle,
+      feed: SPRITES.idle,
+      play: SPRITES.idle,
+      sleep: SPRITES.idle,
+      walk: SPRITES.idle,
+      bathe: SPRITES.idle,
+    };
+
+    const TEXTURES = {
+      memoryPlaceholder: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABbUlEQVR4nO2bMRLBQBiFw+jVWqkVjFKjM+MGbuASCpdwEjM6jdJwAlq1E1BhxS5W9v8f/vdVSXZj3759+SVMKqNe65QZpooWgMa8ATV3Z70/oHSo0m02rtvmE2DegFqoYdDONXWIs9juvMfNJ4AGoAWgoQFoAWhoAFoAmuB9QEqmw/F1ezKfJe9fBlED3IkUj/kmFts/BSoJuFDvdW47c82Rw4jVAN9qPmuP7Z8KFkHNwY6rjeZwbyGWgFdFq9ge2z8VvAQkP/yyau9+r8f2T4FKDYidhPSkXcxfAjQALQCNzsNQ3v/43MlumVDJI+IJKDP5FOe/QtyAsiv48wn4dmiAxiCfxlg6/lnGBNAAGoAWgMa8AWo/ifkqunuXp1HxfZhPAA1AC0Bj3gDV/wWKoAqfi/kE0AC0ADQ0AC0ADQ1AC0BDA9AC0NAAtAA0NAAtAI15A4KPw6F3bP4N8wkwb8DdJeC+UWkF8wkwb8AZc3BK4AgmE0QAAAAASUVORK5CYII='
+    };
+
+    const STORAGE_KEY = 'mollySaveV1';
+    const decayPerMinute = { food: 0.28, rest: 0.25, mood: 0.2, health: 0.12 };
+
+    const actionEffects = {
+      cuddle: { mood: 12, health: 2 },
+      feed: { food: 28, health: 2 },
+      play: { mood: 14, rest: -10, health: 1 },
+      sleep: { rest: 32, mood: 4 },
+      walk: { mood: 10, health: 10, rest: -6 },
+      bathe: { health: 16, mood: 6 },
+    };
+
+    const shopItems = [
+      { id: 'feast', name: 'Premium Feast', desc: 'Instantly fills Food', cost: 100, apply: state => state.stats.food = 100 },
+      { id: 'catnip', name: 'Catnip Mouse', desc: 'Mood to the max', cost: 200, apply: state => state.stats.mood = 100 },
+      { id: 'pillow', name: 'Cloud Pillow', desc: 'Full Rest boost', cost: 200, apply: state => state.stats.rest = 100 },
+    ];
+
+    const memorySlots = [
+      { title: 'First hello', threshold: 0, image: TEXTURES.memoryPlaceholder },
+      { title: 'Sunny nap', threshold: 1000, image: TEXTURES.memoryPlaceholder },
+      { title: 'Favorite box', threshold: 1500, image: TEXTURES.memoryPlaceholder },
+      { title: 'Window watch', threshold: 2000, image: TEXTURES.memoryPlaceholder },
+      { title: 'Cozy cuddle', threshold: 2500, image: TEXTURES.memoryPlaceholder },
+      { title: 'Garden walk', threshold: 3000, image: TEXTURES.memoryPlaceholder },
+      { title: 'Play time', threshold: 3500, image: TEXTURES.memoryPlaceholder },
+      { title: 'Bath time', threshold: 4000, image: TEXTURES.memoryPlaceholder },
+      { title: 'Sleepyhead', threshold: 4500, image: TEXTURES.memoryPlaceholder },
+    ];
+
+    const defaultState = {
+      stats: { food: 82, rest: 80, mood: 84, health: 86 },
+      hearts: 0,
+      lastTimestamp: Date.now(),
+      memoriesUnlocked: memorySlots.map((slot, index) => index === 0),
+    };
+
+    let state = loadState();
+
+    const spriteEl = document.getElementById('molly-sprite');
+    const loveCountEl = document.getElementById('love-count');
+    const statsEls = {
+      food: document.querySelector('[data-stat="food"]'),
+      rest: document.querySelector('[data-stat="rest"]'),
+      mood: document.querySelector('[data-stat="mood"]'),
+      health: document.querySelector('[data-stat="health"]'),
+    };
+
+    spriteEl.src = SPRITES.idle;
+
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleAction(btn.dataset.action));
+    });
+
+    spriteEl.addEventListener('click', () => {
+      updateHearts(1);
+      pulseSprite();
+      spawnFloating('+1 heart', '#ff7f7f');
+      saveState();
+    });
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return clone(defaultState);
+        const parsed = JSON.parse(raw);
+        return {
+          stats: { ...defaultState.stats, ...(parsed.stats || {}) },
+          hearts: parsed.hearts ?? defaultState.hearts,
+          lastTimestamp: parsed.lastTimestamp ?? Date.now(),
+          memoriesUnlocked: parsed.memoriesUnlocked?.slice(0, memorySlots.length) ?? defaultState.memoriesUnlocked,
+        };
+      } catch (e) {
+        return clone(defaultState);
+      }
+    }
+
+    function saveState() {
+      state.lastTimestamp = Date.now();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function clamp(n, min = 0, max = 100) { return Math.max(min, Math.min(max, n)); }
+
+    function applyDecay(deltaMinutes) {
+      Object.keys(decayPerMinute).forEach(key => {
+        state.stats[key] = clamp(state.stats[key] - decayPerMinute[key] * deltaMinutes);
+      });
+    }
+
+    function applyOfflineDecay() {
+      const now = Date.now();
+      const deltaMinutes = (now - state.lastTimestamp) / 60000;
+      if (deltaMinutes > 0.01) {
+        applyDecay(deltaMinutes);
+        state.lastTimestamp = now;
+        saveState();
+      }
+    }
+
+    function updateStatsUI() {
+      Object.entries(state.stats).forEach(([key, value]) => {
+        const statEl = statsEls[key];
+        if (!statEl) return;
+        const bar = statEl.querySelector('.bar-fill');
+        const valueEl = statEl.querySelector('.value');
+        bar.style.setProperty('--value', `${value}%`);
+        valueEl.textContent = Math.round(value);
+        if (value < 30) {
+          statEl.classList.add('low');
+        } else {
+          statEl.classList.remove('low');
+        }
+      });
+    }
+
+    function updateHearts(delta = 0) {
+      state.hearts = Math.max(0, Math.round((state.hearts || 0) + delta));
+      loveCountEl.textContent = state.hearts;
+      updateShopButtons();
+      updateMemories();
+    }
+
+    function pulseSprite() {
+      spriteEl.classList.add('boop');
+      setTimeout(() => spriteEl.classList.remove('boop'), 160);
+    }
+
+    function spawnFloating(text, color) {
+      const node = document.createElement('div');
+      node.className = 'floating';
+      node.textContent = text;
+      node.style.color = color || '#f6a03d';
+      document.getElementById('floating-container').appendChild(node);
+      setTimeout(() => node.remove(), 900);
+    }
+
+    function handleAction(action) {
+      const effect = actionEffects[action];
+      if (!effect) return;
+      applyOfflineDecay();
+      Object.entries(effect).forEach(([stat, delta]) => {
+        state.stats[stat] = clamp(state.stats[stat] + delta);
+      });
+      playActionAnimation(action);
+      updateStatsUI();
+      saveState();
+    }
+
+    function playActionAnimation(action) {
+      const source = ANIMATIONS[action] || SPRITES.idle;
+      spriteEl.src = source;
+      pulseSprite();
+      spawnFloating(action.toUpperCase(), '#f2c572');
+      setTimeout(() => { spriteEl.src = SPRITES.idle; }, 900);
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab-${tab}`).classList.add('active');
+      document.querySelector(`.nav-btn[data-tab="${tab}"]`).classList.add('active');
+    }
+
+    function buildShop() {
+      const holder = document.getElementById('shop-items');
+      holder.innerHTML = '';
+      shopItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'shop-card';
+        card.innerHTML = `
+          <div>
+            <h3>${item.name}</h3>
+            <p>${item.desc}</p>
+          </div>
+          <button class="buy-btn" data-id="${item.id}">
+            <span class="pill"><svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 21s-6.6-4.3-9.2-8.3C.4 10.2.8 6.7 3.3 5c2.5-1.7 5 0 6 1.5C10.3 5 12.8 3.3 15.3 5c2.5 1.7 2.9 5.2.5 7.7C18.6 16.7 12 21 12 21z" fill="#ff7f7f"/></svg> ${item.cost}</span>
+          </button>
+        `;
+        holder.appendChild(card);
+      });
+      holder.querySelectorAll('.buy-btn').forEach(btn => {
+        btn.addEventListener('click', () => purchase(btn.dataset.id));
+      });
+    }
+
+    function updateShopButtons() {
+      document.querySelectorAll('.buy-btn').forEach(btn => {
+        const item = shopItems.find(it => it.id === btn.dataset.id);
+        if (!item) return;
+        btn.disabled = state.hearts < item.cost;
+      });
+    }
+
+    function purchase(id) {
+      const item = shopItems.find(it => it.id === id);
+      if (!item || state.hearts < item.cost) return;
+      applyOfflineDecay();
+      state.hearts -= item.cost;
+      item.apply(state);
+      updateHearts(0);
+      updateStatsUI();
+      spawnFloating(`-${item.cost} hearts`, '#ff7f7f');
+      saveState();
+    }
+
+    function buildMemories() {
+      const grid = document.getElementById('memories-grid');
+      grid.innerHTML = '';
+      memorySlots.forEach((slot, index) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        const img = document.createElement('img');
+        img.src = slot.image;
+        img.alt = slot.title;
+        card.appendChild(img);
+        const lock = document.createElement('div');
+        lock.className = 'lock';
+        lock.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7 11V8a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1zm2-3a3 3 0 1 1 6 0v3H9z"/></svg><div>${slot.threshold} hearts</div>`;
+        card.appendChild(lock);
+        grid.appendChild(card);
+      });
+      updateMemories();
+    }
+
+    function updateMemories() {
+      memorySlots.forEach((slot, index) => {
+        if (state.hearts >= slot.threshold) {
+          state.memoriesUnlocked[index] = true;
+        }
+      });
+      const cards = Array.from(document.querySelectorAll('.memory-card'));
+      cards.forEach((card, index) => {
+        const lock = card.querySelector('.lock');
+        if (state.memoriesUnlocked[index]) {
+          lock.style.display = 'none';
+        } else {
+          lock.style.display = 'grid';
+        }
+      });
+      saveState();
+    }
+
+    function tick() {
+      const now = Date.now();
+      const deltaMinutes = (now - state.lastTimestamp) / 60000;
+      if (deltaMinutes > 0) {
+        applyDecay(deltaMinutes);
+        state.lastTimestamp = now;
+        updateStatsUI();
+        saveState();
+      }
+    }
+
+    function init() {
+      applyOfflineDecay();
+      buildShop();
+      buildMemories();
+      updateStatsUI();
+      updateHearts(0);
+      setInterval(tick, 15000);
+    }
+
+    init();
+  </script>
+</body>
+</html>
