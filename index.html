@@ -1058,6 +1058,10 @@
             { length: gameState.memoryCosts.length },
             (_, idx) => `memories/memory-${idx + 1}.jpg`
         );
+        const legacyMemoryFolderImages = Array.from(
+            { length: gameState.memoryCosts.length },
+            (_, idx) => `memories/memory${idx + 1}.jpg`
+        );
         const fallbackMemoryImages = [
             'https://github.com/user-attachments/assets/2aad0e45-32cf-4ba7-863e-cdabbf06ca33',
             'https://github.com/user-attachments/assets/ddb5ab2d-c02c-426d-a493-1ae18044bed6',
@@ -1224,18 +1228,25 @@
                     img.alt = `Memory ${i + 1}`;
                     img.loading = 'lazy';
 
+                    const srcCandidates = [memoryFolderImages[i], legacyMemoryFolderImages[i]].filter(Boolean);
+                    let candidateIndex = 0;
                     let triedFallback = false;
-                    img.onerror = () => {
-                        if (triedFallback || !fallbackSrc) {
-                            img.onerror = null;
-                            slot.innerHTML = `<span class="memory-placeholder">No Image Set</span>`;
+                    const setNextSource = () => {
+                        if (candidateIndex < srcCandidates.length) {
+                            img.src = srcCandidates[candidateIndex++];
                             return;
                         }
-                        triedFallback = true;
-                        img.src = fallbackSrc;
+                        if (!triedFallback && fallbackSrc) {
+                            triedFallback = true;
+                            img.src = fallbackSrc;
+                            return;
+                        }
+                        img.onerror = null;
+                        slot.innerHTML = `<span class="memory-placeholder">No Image Set</span>`;
                     };
 
-                    img.src = memoryFolderImages[i];
+                    img.onerror = setNextSource;
+                    setNextSource();
                     slot.appendChild(img);
                 } else {
                     slot.classList.add('locked');
