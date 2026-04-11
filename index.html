@@ -989,14 +989,19 @@
             roomItems: []
         };
 
-        // Memory images (placeholders - user can add real photos as base64)
-        const memoryImages = [
+        // Memory images load from /memories and fall back to these defaults
+        const memoryFolderPath = 'memories';
+        const memoryImageDefaults = [
             'https://github.com/user-attachments/assets/2aad0e45-32cf-4ba7-863e-cdabbf06ca33',
             'https://github.com/user-attachments/assets/ddb5ab2d-c02c-426d-a493-1ae18044bed6',
             'https://github.com/user-attachments/assets/bd140540-fa15-4aa2-81ca-da2a6c5e61c5',
             'https://github.com/user-attachments/assets/98610b79-fc33-4160-8f3b-d825e45749db',
             null, null, null, null, null, null
         ];
+
+        function getMemoryImagePath(index) {
+            return `${memoryFolderPath}/memory-${index + 1}.jpg`;
+        }
 
         // Action configurations with GIF mappings
         const actions = {
@@ -1146,11 +1151,28 @@
 
                 if (gameState.unlockedMemories.includes(i)) {
                     slot.classList.add('unlocked');
-                    if (memoryImages[i]) {
-                        slot.innerHTML = `<img src="${memoryImages[i]}" class="memory-image" alt="Memory ${i + 1}">`;
-                    } else {
-                        slot.innerHTML = `<span class="memory-placeholder">No Image Set</span>`;
-                    }
+                    slot.innerHTML = '';
+
+                    const img = document.createElement('img');
+                    img.className = 'memory-image';
+                    img.alt = `Memory ${i + 1}`;
+
+                    const fallbackUrl = memoryImageDefaults[i];
+                    const showPlaceholder = () => {
+                        slot.innerHTML = `<span class="memory-placeholder">Upload memory-${i + 1}.jpg to /${memoryFolderPath}</span>`;
+                    };
+
+                    img.onerror = () => {
+                        if (!img.dataset.triedFallback && fallbackUrl) {
+                            img.dataset.triedFallback = 'true';
+                            img.src = fallbackUrl;
+                        } else {
+                            showPlaceholder();
+                        }
+                    };
+
+                    img.src = getMemoryImagePath(i);
+                    slot.appendChild(img);
                 } else {
                     slot.classList.add('locked');
                     slot.dataset.index = i;
