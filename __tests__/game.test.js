@@ -20,6 +20,7 @@ describe('game logic', () => {
 
     beforeEach(() => {
         jest.useFakeTimers();
+        window.localStorage.clear();
         bootstrapGame();
         api = window.__TEST_API;
     });
@@ -98,6 +99,32 @@ describe('game logic', () => {
         api.unlockMemory(1);
         expect(window.gameState.unlockedMemories).toContain(1);
         expect(window.gameState.hearts).toBe(1000);
+    });
+
+    describe('memory code unlock', () => {
+        test('correct code unlocks all slots for the session without saving progress', () => {
+            const setItemSpy = jest.spyOn(Object.getPrototypeOf(window.localStorage), 'setItem');
+            document.getElementById('memoryCodeInput').value = 'ayeshalovesmolly';
+
+            api.handleMemoryCodeSubmit({ preventDefault: jest.fn() });
+
+            const unlockedSlots = document.querySelectorAll('#memoriesGrid .memory-slot.unlocked');
+            expect(unlockedSlots.length).toBe(window.gameState.memoryCosts.length);
+            expect(window.gameState.unlockedMemories).toEqual([0]);
+            expect(setItemSpy).not.toHaveBeenCalled();
+        });
+
+        test('code unlock requires re-entry after reloading the game', () => {
+            document.getElementById('memoryCodeInput').value = 'ayeshalovesmolly';
+            api.handleMemoryCodeSubmit({ preventDefault: jest.fn() });
+
+            bootstrapGame();
+            api = window.__TEST_API;
+            api.renderMemories();
+
+            const unlockedSlots = document.querySelectorAll('#memoriesGrid .memory-slot.unlocked');
+            expect(unlockedSlots.length).toBe(1);
+        });
     });
 
     describe('renderMemories', () => {
