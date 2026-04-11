@@ -116,7 +116,7 @@ describe('game logic', () => {
             expect(img.src).toContain('memories/memory-1.jpg');
         });
 
-        test('onerror on unlocked slot with fallback swaps src to fallback URL', () => {
+        test('onerror on unlocked slot tries legacy filename then fallback URL', () => {
             // Slot 0 has a built-in fallback URL
             window.gameState.unlockedMemories = [0];
             api.renderMemories();
@@ -125,6 +125,10 @@ describe('game logic', () => {
             expect(img).not.toBeNull();
 
             // Simulate the local file failing to load
+            img.onerror();
+            expect(img.src).toContain('memories/memory1.jpg');
+
+            // Simulate the legacy name failing to load
             img.onerror();
             expect(img.src).toContain('github.com/user-attachments/assets');
         });
@@ -137,9 +141,11 @@ describe('game logic', () => {
             const slot = document.querySelector('#memoriesGrid .memory-slot.unlocked');
             const img = slot.querySelector('img');
 
-            // First onerror: switches to fallback URL
+            // First onerror: switches to legacy filename
             img.onerror();
-            // Second onerror: fallback also failed → show text placeholder
+            // Second onerror: switches to fallback URL
+            img.onerror();
+            // Third onerror: fallback also failed → show text placeholder
             img.onerror();
 
             expect(slot.querySelector('.memory-placeholder')).not.toBeNull();
@@ -155,8 +161,9 @@ describe('game logic', () => {
             const slot = slots[4];
             const img = slot.querySelector('img');
 
-            // Single onerror should show placeholder directly (no fallback URL for index 4)
-            img.onerror();
+            // Legacy filename attempt then placeholder (no fallback URL for index 4)
+            img.onerror(); // try legacy filename
+            img.onerror(); // show placeholder
 
             expect(slot.querySelector('.memory-placeholder')).not.toBeNull();
             expect(slot.querySelector('.memory-placeholder').textContent).toBe('No Image Set');
