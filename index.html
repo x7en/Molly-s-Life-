@@ -1489,7 +1489,8 @@
             if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
                 return crypto.randomUUID();
             }
-            // Fallback for environments without crypto.randomUUID
+            // Fallback for environments without crypto.randomUUID (RFC 4122 UUID v4)
+            // 'y' positions use 0x3 | 0x8 to set bits 6-7 to 10 per the spec
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
                 const r = (typeof crypto !== 'undefined' && crypto.getRandomValues)
                     ? (crypto.getRandomValues(new Uint8Array(1))[0] & 15)
