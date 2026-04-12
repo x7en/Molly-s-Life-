@@ -101,7 +101,7 @@ describe('game logic', () => {
         expect(dropImg.src).toContain('assets/textures/food/bowl.png');
 
         jest.advanceTimersByTime(1000);
-        expect(dropImg.classList.contains('visible')).toBe(false);
+        expect(drop.classList.contains('visible')).toBe(false);
     });
 
     test('purchaseFood deducts hearts and adds servings', () => {

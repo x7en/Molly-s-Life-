@@ -1284,7 +1284,7 @@
         ];
         let foodInventory = {};
         let selectedFood = null;
-        const platePileTexture = 'assets/textures/food/03_dish_pile.png';
+        const platePileTexture = 'assets/textures/food/dish_pile.png';
         textures.foodPile = platePileTexture;
 
         // Room background
@@ -1485,15 +1485,39 @@
             startDecayLoop();
         }
 
+        function generateUserId() {
+            if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+                return crypto.randomUUID();
+            }
+            // Fallback for environments without crypto.randomUUID
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+                const r = (typeof crypto !== 'undefined' && crypto.getRandomValues)
+                    ? (crypto.getRandomValues(new Uint8Array(1))[0] & 15)
+                    : Math.floor(Math.random() * 16);
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        }
+
         // Load game from localStorage
         function loadGame() {
             codeUnlockActive = false;
             let userId = localStorage.getItem('mollyUserId');
             if (!userId) {
-                userId = crypto.randomUUID();
+                userId = generateUserId();
                 localStorage.setItem('mollyUserId', userId);
             }
-            const saved = localStorage.getItem(`mollyGame_${userId}`);
+            const saveKey = `mollyGame_${userId}`;
+            let saved = localStorage.getItem(saveKey);
+
+            // Migrate legacy save if namespaced save is missing
+            if (!saved) {
+                const legacySaved = localStorage.getItem('mollyGame');
+                if (legacySaved) {
+                    saved = legacySaved;
+                    localStorage.setItem(saveKey, legacySaved);
+                }
+            }
+
             if (saved) {
                 const parsed = JSON.parse(saved);
                 gameState.hearts = parsed.hearts || 0;
@@ -1514,7 +1538,7 @@
         function saveGame() {
             let userId = localStorage.getItem('mollyUserId');
             if (!userId) {
-                userId = crypto.randomUUID();
+                userId = generateUserId();
                 localStorage.setItem('mollyUserId', userId);
             }
             gameState.lastUpdate = Date.now();
@@ -1849,7 +1873,7 @@
                         </div>
                     </div>
                     <div class="food-actions">
-                        <button class="shop-btn buy-food-btn" type="button">
+                        <button class="shop-btn buy-food-btn" type="button" data-cost="${food.cost}">
                             <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                             <span>Buy</span>
                         </button>
@@ -1895,14 +1919,24 @@
             if (getFoodStock(food.id) <= 0) return;
             setFoodStock(food.id, getFoodStock(food.id) - 1);
             selectedFood = food;
+            // Apply gameplay effects synchronously so progress isn't lost on page close
+            const action = actions.feed;
+            applyActionEffects(action);
+            gameState.lastFedAt = Date.now();
             saveGame();
             updateUI();
             closeFoodSheet();
             startFeedingSequence(food);
         }
 
+        let feedingTimeoutIds = [];
+
         function startFeedingSequence(food) {
             if (!food) return;
+            // Cancel any in-progress feeding sequence
+            feedingTimeoutIds.forEach(id => clearTimeout(id));
+            feedingTimeoutIds = [];
+
             const action = actions.feed;
             const duration = action.duration || 3000;
             selectedFood = food;
@@ -1910,15 +1944,11 @@
             setFoodDropTexture();
             showFoodDrop();
 
-            setTimeout(() => {
-                applyActionEffects(action);
-                gameState.lastFedAt = Date.now();
+            const t1 = setTimeout(() => {
                 setMollyAnimation(action.gif, duration);
                 showFloatingActionLabel(action.text);
-                updateUI();
-                saveGame();
 
-                setTimeout(() => {
+                const t2 = setTimeout(() => {
                     const dropImg = document.getElementById('foodDropImg');
                     if (dropImg) {
                         dropImg.onerror = () => {
@@ -1927,12 +1957,16 @@
                         };
                         dropImg.src = 'assets/textures/food/bowl.png';
                     }
-                    setTimeout(() => {
+                    const t3 = setTimeout(() => {
                         hideFoodDrop();
                         selectedFood = null;
+                        feedingTimeoutIds = [];
                     }, 1000);
+                    feedingTimeoutIds.push(t3);
                 }, duration);
+                feedingTimeoutIds.push(t2);
             }, 600);
+            feedingTimeoutIds.push(t1);
         }
 
         // Unlock memory
