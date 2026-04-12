@@ -7,21 +7,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cream: #FFF8E7;
-            --cream-dark: #FFE4C4;
-            --orange: #FF9F5A;
-            --orange-dark: #E8843C;
-            --pink: #FF7AA2;
-            --blue: #5AA9FF;
-            --green: #7ED957;
-            --red: #FF6B6B;
-            --purple: #B8A9FF;
-            --teal: #5AD4C4;
-            --yellow: #FFD93D;
-            --brown: #8B5A3C;
-            --text: #5A4A3A;
-            --text-light: #8B7A6A;
-            --shadow: rgba(139, 90, 60, 0.15);
+            --cream: #FFF7E0;
+            --cream-dark: #FFE0BA;
+            --orange: #F07A24;
+            --orange-dark: #D46316;
+            --pink: #E95989;
+            --blue: #3D8DFF;
+            --green: #5EC14A;
+            --red: #E05555;
+            --purple: #9F90F7;
+            --teal: #40C0B1;
+            --yellow: #F4C534;
+            --brown: #6F4A2B;
+            --text: #3A2B1C;
+            --text-light: #564433;
+            --shadow: rgba(63, 44, 28, 0.18);
+            --placeholder-bg: #F0E6D8;
         }
 
         * {
@@ -234,6 +235,7 @@
             overflow: hidden;
             padding: 10px;
             backdrop-filter: blur(2px);
+            touch-action: manipulation;
         }
 
         .molly-circle:active {
@@ -1229,9 +1231,130 @@
     </div>
 
     <!-- Toast -->
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
+        // Core constants
+        const DECAY_RATES = Object.freeze({ food: 0.5, mood: 0.3, rest: 0.4, life: 0.2 });
+        const DECAY_INTERVAL_MS = 5000;
+        const SAVE_DEBOUNCE_MS = 2000;
+        const ASSET_TIMEOUT_MS = 2000;
+        const TAP_DEBOUNCE_MS = 180;
+        const BORED_MEOW_DELAY_MS = 25000;
+        const FEED_INTRO_DELAY_MS = 600;
+        const FEED_CLEANUP_DELAY_MS = 1000;
+        const HAPTIC_BUMP_MS = 12;
+
+        /**
+         * @template T
+         * @param {T} value
+         * @returns {T}
+         */
+        function deepClone(value) {
+            return JSON.parse(JSON.stringify(value));
+        }
+
+        /**
+         * @template T
+         * @param {(...args: any[]) => T} fn
+         * @param {number} wait
+         * @returns {(...args: any[]) => void}
+         */
+        function debounce(fn, wait) {
+            let timer = null;
+            return (...args) => {
+                if (timer) {
+                    clearTimeout(timer);
+                }
+                timer = setTimeout(() => fn(...args), wait);
+            };
+        }
+
+        function clamp(val, min, max) {
+            return Math.min(max, Math.max(min, val));
+        }
+
+        function safeVibrate(duration = HAPTIC_BUMP_MS) {
+            if (navigator?.vibrate) {
+                navigator.vibrate(duration);
+            }
+        }
+
+        function buildPlaceholderSvg(label) {
+            const safeLabel = encodeURIComponent(label);
+            return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><rect width='100%' height='100%' rx='18' ry='18' fill='%23f0e6d8' stroke='%23d7c5b0' stroke-width='4'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Nunito' font-size='18' fill='%235A4A3A'>${safeLabel}</text></svg>`;
+        }
+
+        function loadImageWithTimeout(img, src, fallback, onSuccess) {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (!settled) {
+                    settled = true;
+                    img.src = fallback;
+                }
+            }, ASSET_TIMEOUT_MS);
+
+            img.onload = () => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                img.onload = null;
+                img.onerror = null;
+                if (typeof onSuccess === 'function') onSuccess();
+            };
+            img.onerror = () => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                img.src = fallback;
+            };
+            img.src = src;
+        }
+
+        function safeLocalStorageGet(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (err) {
+                console.warn('localStorage get failed', err);
+                return null;
+            }
+        }
+
+        function safeLocalStorageSet(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (err) {
+                console.warn('localStorage set failed', err);
+                showToast('Storage is full — recent progress may not save.');
+                return false;
+            }
+        }
+
+        function safeLocalStorageRemove(key) {
+            try {
+                localStorage.removeItem(key);
+            } catch (err) {
+                console.warn('localStorage remove failed', err);
+            }
+        }
+
+        /**
+         * @param {object} target
+         * @param {object} patch
+         */
+        function mergeState(target, patch) {
+            Object.entries(patch || {}).forEach(([key, value]) => {
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    if (!target[key] || typeof target[key] !== 'object') {
+                        target[key] = {};
+                    }
+                    mergeState(target[key], value);
+                } else {
+                    target[key] = value;
+                }
+            });
+        }
         // GIF Data URLs (backgrounds removed, transparent)
         const gifUrls = {
             idle: 'data:image/gif;base64,R0lGODlhAAEAAYMAAAAAAFBwas6ADyQVAIxKBN7e3pxTBL29vXtCBGaiKobeL4wfVgAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBCgAAACwAAAAAAAEAAQAI/wADCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duxwB6N3Lt6/fv4ADCx5MuLDhw4gTK17MuLHjx5AjS55MubLly5gza97MubPnz6BDix5NurTp06hTq17NurXr17Bjy55Nu7bt27hz697Nu7fv38CDCx9OvLjx48iTK1/OvLnz59CjS59Ovbr169iza9/Ovbv37+DDi/8fT768+fPo06tfz769+/fw48ufT7++/fv48+vfz7+///8ABijggAQWaOCBCCao4IIMNujggxBGKOGEFFZo4YUYZqjhhhx26OGHIIYo4ogklmjiiSimqOKKLLbo4oswxijjjDTWaOONOOao44489ujjj0AGKeSQRBZp5JFIJqnkkkw26eSTUEa52QBUDsBYlVZKGRiWV1ap5ZZeLsbll3+NqZiZZGIpwJoCoAmYmmy6+SSca8rpF51thiklnnb2xaeeUf5JJWGCZukknmwmmuege2FJwKMEJNonkogqWiegjkIqKaBMVmopmpk+uimjh1Zp6aeYVglppHFyumSorK7/uSqWtNY6wKyuKglrorjaamuvhja5K5vA+grrpEcOKyukxv7KbK5Jwgrsqrxq2mqtUEr7LJXUEmvtpdjOqeqq2976rQDdgktrtuOSS4Cy6J7rK7vNnqpouooia2SzVNpbrain6lskvwP46y3AqJIqLL8GL4twvtBS2m6siipgsQINC3AxxtcGKzG35ya6ccYjd9zpxPaWbLDKi3qcLMqnspzyxaO6LKSn/iagcwKJFuDzzz7vzLPJL/ebMZtC9wz0z0kTva+pR6/Z9JpLM71zzR8XHLUAUwtQddBXOz0w1Fuz+XUBC6S9ANBYF6112VR/rfbaP7f9tNFwey232myL/00kzhmfPXff6p6MN9xn273w4WUn7verZCP+teKGvy15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',
@@ -1381,7 +1504,7 @@
         }
 
         // Game State
-        const gameState = {
+        const defaultState = {
             hearts: 0,
             stats: {
                 food: 80,
@@ -1397,11 +1520,35 @@
                 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000
             ],
             roomItems: [],
-            foodInventory: {}
+            foodInventory: {},
+            pendingActions: []
         };
+        const gameState = deepClone(defaultState);
         window.gameState = gameState;
-        window.foodInventory = foodInventory;
-        foodInventory = gameState.foodInventory;
+        Object.defineProperty(window, 'foodInventory', {
+            get() {
+                return gameState.foodInventory;
+            },
+            set() {
+                // Prevent accidental reassignment; single source of truth stays in gameState.
+            }
+        });
+
+        const saveGameDebounced = debounce(() => saveGame(), SAVE_DEBOUNCE_MS);
+
+        /**
+         * @param {object} patch
+         * @param {{save?: boolean, ui?: boolean}} options
+         */
+        function updateState(patch = {}, { save = true, ui = true } = {}) {
+            mergeState(gameState, patch);
+            if (ui) {
+                updateUI();
+            }
+            if (save) {
+                saveGameDebounced();
+            }
+        }
 
         // Session-only unlock flag for the secret code
         let codeUnlockActive = false;
