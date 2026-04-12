@@ -1704,11 +1704,10 @@
         }
 
         /**
-         * Validate existing images and swap broken ones with placeholders.
+         * Validate a list of img elements and swap broken ones with placeholders.
          */
-        function validateAssets() {
-            const imgs = Array.from(document.querySelectorAll('img'));
-            imgs.forEach(img => {
+        function validateImages(imgs) {
+            Array.from(imgs).forEach(img => {
                 const applyPlaceholder = () => {
                     img.onerror = null;
                     img.src = img.dataset.fallback || PLACEHOLDER_TEXTURE;
@@ -1727,6 +1726,13 @@
                     applyPlaceholder();
                 }
             });
+        }
+
+        /**
+         * Validate all existing images in the document and swap broken ones with placeholders.
+         */
+        function validateAssets() {
+            validateImages(document.querySelectorAll('img'));
         }
 
 
@@ -2298,7 +2304,10 @@
                 marketList.appendChild(card);
             });
 
-            validateAssets();
+            validateImages([
+                ...ownedList.querySelectorAll('img'),
+                ...marketList.querySelectorAll('img')
+            ]);
         }
 
         function createActionId() {
