@@ -55,6 +55,38 @@ describe('game logic', () => {
         expect(window.foodInventory.bowl).toBe(2);
     });
 
+    test('loadGame tolerates malformed unlock and pending data', () => {
+        const saved = {
+            hearts: 3,
+            stats: { food: 10, mood: 20, rest: 30, life: 40 },
+            unlockedMemories: 'oops',
+            pendingActions: 'not-an-array'
+        };
+
+        window.localStorage.setItem('mollyUserId', 'bad-data-user');
+        window.localStorage.setItem('mollyGame_bad-data-user', JSON.stringify(saved));
+        api.loadGame();
+
+        expect(window.gameState.unlockedMemories).toEqual([0]);
+        expect(window.gameState.pendingActions).toEqual([]);
+        expect(window.gameState.hearts).toBe(3);
+        expect(window.gameState.stats).toEqual(saved.stats);
+    });
+
+    test('loadGame filters unlocked memories to valid unique indices', () => {
+        const saved = {
+            hearts: 7,
+            stats: { food: 30, mood: 40, rest: 50, life: 60 },
+            unlockedMemories: [5, -1, '2', 5, 99]
+        };
+
+        window.localStorage.setItem('mollyUserId', 'filter-user');
+        window.localStorage.setItem('mollyGame_filter-user', JSON.stringify(saved));
+        api.loadGame();
+
+        expect(window.gameState.unlockedMemories).toEqual([0, 2, 5]);
+    });
+
     test('applyOfflineDecay reduces stats over elapsed minutes', () => {
         const baseTime = new Date('2024-01-01T00:00:00Z').getTime();
         jest.setSystemTime(baseTime + 10 * 60 * 1000);
