@@ -190,7 +190,7 @@
         .room-items {
             position: absolute;
             inset: 0;
-            z-index: 4;
+            z-index: 5;
             pointer-events: none;
         }
 
@@ -214,7 +214,7 @@
             top: 55%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 10;
+            z-index: 100;
         }
 
         .molly-circle {
@@ -247,6 +247,8 @@
         #mollyGif {
             width: 128px;
             height: 128px;
+            position: relative;
+            z-index: 101;
             image-rendering: pixelated;
             filter: drop-shadow(0 6px 14px rgba(0,0,0,0.2));
             transition: transform 0.3s ease, filter 0.3s ease;
@@ -276,7 +278,7 @@
             opacity: 0;
             transition: all 0.25s ease;
             pointer-events: none;
-            z-index: 8;
+            z-index: 9;
             filter: drop-shadow(0 6px 10px rgba(0,0,0,0.2));
         }
 
@@ -289,6 +291,7 @@
             width: 56px;
             height: 56px;
             image-rendering: pixelated;
+            object-fit: contain;
         }
 
         .plate-pile {
@@ -300,7 +303,7 @@
             align-items: flex-end;
             gap: 6px;
             pointer-events: none;
-            z-index: 7;
+            z-index: 6;
             opacity: 0;
             transition: opacity 0.25s ease;
         }
@@ -397,7 +400,7 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
             box-shadow: 0 4px 0 var(--shadow);
             touch-action: manipulation;
         }
@@ -407,9 +410,12 @@
             box-shadow: 0 0 0 var(--shadow);
         }
 
-        .care-btn.active-action {
+        .care-grid .care-btn.active-action,
+        .care-btn.active-action:active {
             border-color: var(--orange);
             background: var(--cream-dark);
+            box-shadow: 0 4px 0 var(--shadow);
+            transform: translateY(0);
         }
 
         .care-btn:disabled,
@@ -514,6 +520,7 @@
             padding: 14px 16px 20px;
             transform: translateY(100%);
             transition: transform 0.3s ease;
+            overflow-x: hidden;
         }
 
         .food-sheet-overlay.active .food-sheet {
@@ -546,8 +553,21 @@
 
         .food-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            align-items: stretch;
             gap: 12px;
+            width: 100%;
+        }
+
+        #ownedFoodList.food-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            max-height: 360px;
+            overflow-y: hidden;
+            padding-right: 4px;
+        }
+
+        #ownedFoodList.food-grid.scrollable {
+            overflow-y: auto;
         }
 
         .food-card {
@@ -563,12 +583,14 @@
             text-align: left;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
             cursor: pointer;
+            min-width: 0;
         }
 
         .food-card-info {
             display: flex;
             flex-direction: column;
             gap: 6px;
+            min-width: 0;
         }
 
         .food-card:active {
@@ -578,6 +600,8 @@
 
         .food-card.market {
             cursor: default;
+            align-items: flex-start;
+            flex-wrap: wrap;
         }
 
         .food-card img {
@@ -594,6 +618,7 @@
             font-size: 10px;
             color: var(--brown);
             line-height: 1.4;
+            word-break: break-word;
         }
 
         .food-stock {
@@ -636,11 +661,18 @@
             flex-direction: column;
             align-items: flex-end;
             gap: 8px;
+            width: 100%;
+            align-self: stretch;
+            position: static;
         }
 
         .food-card .shop-btn {
             min-width: 84px;
             padding: 10px 12px;
+            position: relative;
+            justify-content: center;
+            width: 100%;
+            margin-top: 2px;
         }
 
         /* Shop Section */
@@ -688,6 +720,10 @@
             gap: 16px;
             margin-bottom: 12px;
             box-shadow: 0 4px 0 var(--shadow);
+        }
+
+        .shop-item.owned {
+            opacity: 0.7;
         }
 
         .shop-item-icon {
@@ -759,6 +795,14 @@
             background: #ccc;
             box-shadow: 0 4px 0 #999;
             cursor: not-allowed;
+            opacity: 0.5;
+            filter: saturate(0.7);
+        }
+
+        .shop-btn.owned {
+            background: #d7d7d7;
+            color: #555;
+            box-shadow: 0 4px 0 #a3a3a3;
         }
 
         /* Memories Section */
@@ -904,21 +948,59 @@
             padding: 16px;
         }
 
-        .memory-spinner {
+        .memory-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .memory-heart {
             width: 32px;
             height: 32px;
-            border-radius: 50%;
-            border: 3px solid var(--cream-dark);
-            border-top-color: var(--orange);
-            animation: spin 0.9s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: memoryHeartPulse 1.2s ease-in-out infinite;
         }
+
+        .memory-heart svg {
+            width: 28px;
+            height: 28px;
+            fill: #FF7AA2;
+            filter: drop-shadow(0 0 6px rgba(255, 122, 162, 0.35));
+        }
+
+        .memory-paws {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .memory-paw {
+            font-size: 16px;
+            opacity: 0;
+            animation: memoryPawFade 1.2s ease-in-out infinite;
+        }
+
+        .memory-paw:nth-child(1) { animation-delay: 0s; color: #FF7AA2; }
+        .memory-paw:nth-child(2) { animation-delay: 0.2s; color: #F2852F; }
+        .memory-paw:nth-child(3) { animation-delay: 0.4s; color: #FF7AA2; }
 
         .asset-placeholder {
             background: var(--cream-dark);
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes memoryHeartPulse {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.7; }
+        }
+
+        @keyframes memoryPawFade {
+            0% { opacity: 0; transform: translateY(4px); }
+            50% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-4px); }
         }
 
         .memory-lock {
@@ -1028,6 +1110,25 @@
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .toast {
+                bottom: 120px;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .care-btn,
+            .shop-btn,
+            .nav-item,
+            .food-card,
+            .food-card .shop-btn {
+                min-height: 44px;
+            }
+            .food-card .shop-btn {
+                padding: 12px 14px;
+            }
         }
 
         /* Home Section */
@@ -1180,10 +1281,10 @@
 
                 <div class="shop-item">
                     <div class="shop-item-icon">
-                        <svg viewBox="0 0 24 24" fill="#B8A9FF"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2M12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20M12 6C9.33 6 7.2 8.03 7.04 10.67C7.03 10.78 7.12 10.88 7.23 10.88H8.72C8.83 10.88 8.92 10.8 8.95 10.7C9.22 9.33 10.47 8.25 12 8.25C13.87 8.25 15.4 9.78 15.4 11.65C15.4 13.03 14.56 14.22 13.36 14.77C13.16 14.86 13.03 15.06 13.03 15.28V16.5C13.03 16.78 13.25 17 13.53 17H14.97C15.25 17 15.47 16.78 15.47 16.5V15.72C15.47 15.5 15.6 15.3 15.8 15.21C17.53 14.44 18.75 12.7 18.75 10.65C18.75 7.89 16.21 6 12 6Z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="#FF8C00"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2M12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20M12 6C9.33 6 7.2 8.03 7.04 10.67C7.03 10.78 7.12 10.88 7.23 10.88H8.72C8.83 10.88 8.92 10.8 8.95 10.7C9.22 9.33 10.47 8.25 12 8.25C13.87 8.25 15.4 9.78 15.4 11.65C15.4 13.03 14.56 14.22 13.36 14.77C13.16 14.86 13.03 15.06 13.03 15.28V16.5C13.03 16.78 13.25 17 13.53 17H14.97C15.25 17 15.47 16.78 15.47 16.5V15.72C15.47 15.5 15.6 15.3 15.8 15.21C17.53 14.44 18.75 12.7 18.75 10.65C18.75 7.89 16.21 6 12 6Z"/></svg>
                     </div>
                     <div class="shop-item-info">
-                        <div class="shop-item-name">Catnip Mouse</div>
+                        <div class="shop-item-name">Orange Ball</div>
                         <div class="shop-item-desc">Fills Mood entirely</div>
                     </div>
                     <button class="shop-btn" data-item="mouse" data-cost="200">
@@ -1288,7 +1389,18 @@
         const MIN_STAT = 0;
         const BORED_MEOW_DELAY_MS = 25000;
         const HAPTIC_SHORT = 30;
-        const MEMORY_SPINNER = '<div class="memory-spinner" aria-hidden="true"></div>';
+        const MEMORY_SPINNER = `
+            <div class="memory-loader" aria-hidden="true">
+                <div class="memory-heart">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <div class="memory-paws">
+                    <span class="memory-paw">🐾</span>
+                    <span class="memory-paw">🐾</span>
+                    <span class="memory-paw">🐾</span>
+                </div>
+            </div>
+        `;
 
         /**
          * @param {string} label
@@ -1303,6 +1415,7 @@
 
         const PLACEHOLDER_IMG = createPlaceholderDataUrl('🐱');
         const PLACEHOLDER_TEXTURE = createPlaceholderDataUrl('🖼️', '#FFE1B3', '#3B2B1B');
+        const FOOD_EMOJI_FALLBACK = createPlaceholderDataUrl('🍖', '#FFE3CC', '#F2852F');
 
         /**
          * Debounce helper used for saves and UI events.
@@ -1375,6 +1488,8 @@
             ball: 'toy'
         };
 
+        const MAX_ROOM_ITEMS = 10;
+
         const DEFAULT_MEMORY_COSTS = [
             0, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500,
             5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000
@@ -1439,13 +1554,30 @@
             Object.entries(customTextureFiles).forEach(([key, url]) => loadCustomTexture(key, url));
         }
 
+        function setFoodDropImage(candidates) {
+            const dropImg = document.getElementById('foodDropImg');
+            if (!dropImg) return;
+            const applySize = () => {
+                if (dropImg.src === FOOD_EMOJI_FALLBACK) {
+                    dropImg.style.width = '40px';
+                    dropImg.style.height = '40px';
+                } else {
+                    dropImg.style.width = '56px';
+                    dropImg.style.height = '56px';
+                }
+            };
+            dropImg.addEventListener('load', applySize, { once: true });
+            loadImageWithFallback(dropImg, candidates, FOOD_EMOJI_FALLBACK);
+            applySize();
+        }
+
         function setFoodDropTexture() {
             const dropImg = document.getElementById('foodDropImg');
             if (dropImg) {
-                const fallbackDish = foodItems[0]?.dish || textures.food;
-                const texture = selectedFood?.dish || fallbackDish || textures.food;
+                const fallbackDish = foodItems[0]?.dish || textures.food || FOOD_EMOJI_FALLBACK;
+                const texture = selectedFood?.dish || fallbackDish || FOOD_EMOJI_FALLBACK;
                 const candidates = [texture, fallbackDish, textures.food].filter(Boolean);
-                loadImageWithFallback(dropImg, candidates, textures.food);
+                setFoodDropImage(candidates);
             }
         }
 
@@ -1468,6 +1600,7 @@
             unlockedMemories: [0],
             memoryCosts: [...DEFAULT_MEMORY_COSTS],
             roomItems: [],
+            ownedItems: [],
             foodInventory: {},
             pendingActions: []
         });
@@ -1518,7 +1651,7 @@
         // Shop items
         const shopItems = Object.freeze({
             feast: { name: 'Premium Feast', stat: 'food', value: 100 },
-            mouse: { name: 'Catnip Mouse', stat: 'mood', value: 100 },
+            mouse: { name: 'Orange Ball', stat: 'mood', value: 100 },
             pillow: { name: 'Cloud Pillow', stat: 'rest', value: 100 }
         });
         window.shopItems = shopItems;
@@ -1817,9 +1950,13 @@
                     ...parsed,
                     stats: { ...createDefaultState().stats, ...(parsed.stats || {}) },
                     memoryCosts: parsed.memoryCosts && Array.isArray(parsed.memoryCosts) ? parsed.memoryCosts : [...DEFAULT_MEMORY_COSTS],
+                    ownedItems: Array.isArray(parsed.ownedItems) ? parsed.ownedItems : [],
                     foodInventory: parsed.foodInventory || {},
                     pendingActions: parsed.pendingActions || []
                 };
+                if (Array.isArray(gameState.roomItems) && gameState.roomItems.length > MAX_ROOM_ITEMS) {
+                    gameState.roomItems = gameState.roomItems.slice(0, MAX_ROOM_ITEMS);
+                }
                 window.gameState = gameState;
             } catch (error) {
                 recoverCorruptedSave(userId);
@@ -1941,11 +2078,7 @@
             if (restBar) restBar.style.width = `${gameState.stats.rest}%`;
             if (lifeBar) lifeBar.style.width = `${gameState.stats.life}%`;
 
-            document.querySelectorAll('.shop-btn').forEach(btn => {
-                const cost = parseInt(btn.dataset.cost, 10);
-                btn.disabled = Number.isFinite(cost) ? gameState.hearts < cost : false;
-            });
-
+            renderShopState();
             toggleFeedButtonDisabled(feedingLock);
             renderPlatePiles();
         }
@@ -2017,7 +2150,7 @@
                     }
                     const spinnerWrapper = document.createElement('div');
                     spinnerWrapper.innerHTML = MEMORY_SPINNER;
-                    const spinner = spinnerWrapper.firstChild;
+                    const spinner = spinnerWrapper.firstElementChild;
                     if (spinner) slot.appendChild(spinner);
 
                     const fallbackSrc = fallbackMemoryImages[i];
@@ -2114,10 +2247,9 @@
                 case 'ArrowUp': nextIndex = Math.max(0, index - 2); break;
                 case 'Enter':
                 case ' ': {
+                    if (!slot.classList.contains('locked')) return;
                     event.preventDefault();
-                    if (slot.classList.contains('locked')) {
-                        unlockMemory(index);
-                    }
+                    unlockMemory(index);
                     return;
                 }
                 default:
@@ -2138,13 +2270,24 @@
             }
         }
 
+        function getLimitedRoomItems() {
+            // FIX: clamp room items count to avoid performance and layering issues
+            const current = Array.isArray(gameState.roomItems) ? gameState.roomItems : [];
+            const limited = current.slice(0, MAX_ROOM_ITEMS);
+            if (current.length !== limited.length) {
+                updateState({ roomItems: limited });
+            }
+            return limited;
+        }
+
         // Render room items
         function renderRoomItems() {
             const layer = document.getElementById('roomItemsLayer');
             if (!layer) return;
             layer.innerHTML = '';
 
-            gameState.roomItems.forEach((item, idx) => {
+            const items = getLimitedRoomItems();
+            items.forEach((item, idx) => {
                 const sprite = document.createElement('img');
                 sprite.src = getRoomItemTexture(item.item) || textures.toy;
                 sprite.alt = item.item;
@@ -2152,8 +2295,7 @@
                 sprite.onerror = () => { sprite.src = PLACEHOLDER_TEXTURE; };
                 sprite.style.left = `${item.x || 50}%`;
                 sprite.style.top = `${item.y || 70}%`;
-                const isFloorToy = item.item === 'ball' || item.item === 'mouse';
-                sprite.style.zIndex = isFloorToy ? '9' : String(3 + idx);
+                sprite.style.zIndex = String(Math.min(8, 3 + idx));
                 layer.appendChild(sprite);
             });
         }
@@ -2194,11 +2336,45 @@
         }
 
         function addRoomItem(itemName) {
+            // FIX: prevent duplicate placement and cap room items
+            const items = getLimitedRoomItems();
+            if (items.length >= MAX_ROOM_ITEMS) {
+                showToast('Room is full! Remove items to add more.');
+                return;
+            }
+            if (items.some(entry => entry.item === itemName)) {
+                return;
+            }
             const x = 20 + Math.random() * 60;
             const y = 55 + Math.random() * 30;
-            const nextItems = [...(gameState.roomItems || []), { item: itemName, x: Math.round(x), y: Math.round(y) }];
+            const nextItems = [...items, { item: itemName, x: Math.round(x), y: Math.round(y) }];
             updateState({ roomItems: nextItems });
             renderRoomItems();
+        }
+
+        function renderShopState() {
+            // FIX: show owned state for non-consumable shop items
+            document.querySelectorAll('.shop-item').forEach(card => {
+                const btn = card.querySelector('.shop-btn');
+                const itemId = btn?.dataset.item;
+                if (!btn || !itemId) return;
+                if (!btn.dataset.defaultLabel) {
+                    btn.dataset.defaultLabel = btn.innerHTML;
+                }
+                const cost = parseInt(btn.dataset.cost, 10);
+                const owned = isItemOwned(itemId);
+                card.classList.toggle('owned', owned);
+                btn.classList.toggle('owned', owned);
+                if (owned) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span>Owned</span>';
+                    btn.setAttribute('aria-label', `${shopItems[itemId]?.name || itemId} owned`);
+                } else {
+                    btn.innerHTML = btn.dataset.defaultLabel;
+                    btn.disabled = Number.isFinite(cost) ? gameState.hearts < cost : false;
+                    btn.setAttribute('aria-label', `${shopItems[itemId]?.name || 'Shop item'} for ${cost} hearts`);
+                }
+            });
         }
 
         function setShopTextures() {
@@ -2254,6 +2430,7 @@
 
             const ownedFoods = foodItems.filter(item => getFoodStock(item.id) > 0);
             const marketFoods = foodItems.filter(item => getFoodStock(item.id) <= 0);
+            ownedList.classList.toggle('scrollable', ownedFoods.length > 3);
 
             if (emptyState) {
                 emptyState.style.display = ownedFoods.length ? 'none' : 'block';
@@ -2299,7 +2476,7 @@
                 `;
                 card.querySelector('.buy-food-btn')?.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    purchaseFood(food);
+                    purchaseFood(food, event);
                 });
                 marketList.appendChild(card);
             });
@@ -2375,16 +2552,21 @@
             foodSheetOpen = false;
         }
 
-        function purchaseFood(food) {
+        function purchaseFood(food, event) {
+            // FIX: debounce purchase taps to block rapid double buys
+            const btn = event?.target?.closest('.shop-btn');
+            if (btn) btn.disabled = true;
             markInteraction();
             if (gameState.hearts < food.cost) {
                 showToast('Not enough hearts!');
+                if (btn) btn.disabled = false;
                 return;
             }
             updateState({ hearts: gameState.hearts - food.cost });
             setFoodStock(food.id, getFoodStock(food.id) + food.servings);
             updateUI();
             renderFoodSheet();
+            if (btn) btn.disabled = false;
             vibrate();
         }
 
@@ -2426,7 +2608,7 @@
                 const dropImg = document.getElementById('foodDropImg');
                 if (dropImg) {
                     const dishCandidates = [food.dish, textures.foodPile, textures.food].filter(Boolean);
-                    loadImageWithFallback(dropImg, dishCandidates, textures.food);
+                    setFoodDropImage(dishCandidates);
                 }
 
                 animationController.setTimeout(() => {
@@ -2606,23 +2788,36 @@
             updateUI();
         }
 
+        function isItemOwned(itemId) {
+            return (gameState.ownedItems || []).includes(itemId);
+        }
+
         // Buy shop item
         function buyItem(itemName, cost) {
+            // FIX: apply owned-state logic and prevent duplicate purchases
             markInteraction();
             const item = shopItems[itemName];
-            if (!item || gameState.hearts < cost) {
+            if (!item) return;
+            if (isItemOwned(itemName)) {
+                showToast('Already owned!');
+                renderShopState();
+                return;
+            }
+            if (gameState.hearts < cost) {
                 showToast('Not enough hearts!');
+                renderShopState();
                 return;
             }
             const statUpdate = clampStat((gameState.stats[item.stat] || 0) + item.value);
             updateState({
                 hearts: gameState.hearts - cost,
                 stats: { ...gameState.stats, [item.stat]: statUpdate },
-                lastFedAt: item.stat === 'food' ? Date.now() : gameState.lastFedAt
+                lastFedAt: item.stat === 'food' ? Date.now() : gameState.lastFedAt,
+                ownedItems: Array.from(new Set([...(gameState.ownedItems || []), itemName]))
             });
             addRoomItem(itemName);
             updateUI();
-            showToast(`${item?.name || 'Item'} used!`);
+            showToast(`${item?.name || 'Item'} acquired!`);
             vibrate();
         }
 
