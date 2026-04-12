@@ -1918,6 +1918,31 @@
             });
         }
 
+        function sanitizeUnlockedMemories(value, totalSlots) {
+            const maxSlots = Number.isFinite(totalSlots) ? totalSlots : DEFAULT_MEMORY_COSTS.length;
+            const incoming = Array.isArray(value) ? value : [];
+            const cleaned = [];
+            incoming.forEach((entry) => {
+                const num = Number(entry);
+                if (Number.isInteger(num) && num >= 0 && num < maxSlots && !cleaned.includes(num)) {
+                    cleaned.push(num);
+                }
+            });
+            if (!cleaned.includes(0)) cleaned.push(0);
+            cleaned.sort((a, b) => a - b);
+            return cleaned;
+        }
+
+        function sanitizePendingActions(value) {
+            if (!Array.isArray(value)) return [];
+            return value.filter(action => action && typeof action === 'object' && typeof action.id === 'string' && action.type);
+        }
+
+        function sanitizeFoodInventory(value) {
+            if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+            return value;
+        }
+
         // Load game from localStorage
         function loadGame() {
             codeUnlockActive = false;
@@ -1945,14 +1970,16 @@
                     recoverCorruptedSave(userId);
                     return;
                 }
+                const memoryCosts = Array.isArray(parsed.memoryCosts) ? parsed.memoryCosts : [...DEFAULT_MEMORY_COSTS];
                 gameState = {
                     ...createDefaultState(),
                     ...parsed,
                     stats: { ...createDefaultState().stats, ...(parsed.stats || {}) },
-                    memoryCosts: parsed.memoryCosts && Array.isArray(parsed.memoryCosts) ? parsed.memoryCosts : [...DEFAULT_MEMORY_COSTS],
+                    memoryCosts,
+                    unlockedMemories: sanitizeUnlockedMemories(parsed.unlockedMemories, memoryCosts.length),
                     ownedItems: Array.isArray(parsed.ownedItems) ? parsed.ownedItems : [],
-                    foodInventory: parsed.foodInventory || {},
-                    pendingActions: parsed.pendingActions || []
+                    foodInventory: sanitizeFoodInventory(parsed.foodInventory),
+                    pendingActions: sanitizePendingActions(parsed.pendingActions)
                 };
                 if (Array.isArray(gameState.roomItems) && gameState.roomItems.length > MAX_ROOM_ITEMS) {
                     gameState.roomItems = gameState.roomItems.slice(0, MAX_ROOM_ITEMS);
