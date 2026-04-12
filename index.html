@@ -269,9 +269,9 @@
 
         .food-drop {
             position: absolute;
-            bottom: 14%;
-            left: 52%;
-            transform: translate(-50%, 30%) scale(0.9);
+            bottom: 18%;
+            left: 50%;
+            transform: translate(-50%, 16%) scale(1);
             opacity: 0;
             transition: all 0.25s ease;
             pointer-events: none;
@@ -288,6 +288,31 @@
             width: 56px;
             height: 56px;
             image-rendering: pixelated;
+        }
+
+        .plate-pile {
+            position: absolute;
+            bottom: 12%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            pointer-events: none;
+            z-index: 7;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .plate-pile.visible {
+            opacity: 1;
+        }
+
+        .plate-pile img {
+            width: 46px;
+            height: 46px;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 5px 12px rgba(0,0,0,0.18));
         }
 
         /* Floating Hearts Animation */
@@ -870,6 +895,7 @@
                     <div class="food-drop" id="foodDrop">
                         <img src="" alt="Treat" id="foodDropImg">
                     </div>
+                    <div class="plate-pile" id="platePile"></div>
                     <div class="molly-container">
                         <div class="molly-circle" id="mollyCircle">
                             <img src="" alt="Molly" id="mollyGif">
@@ -1020,8 +1046,15 @@
             stand: 'data:image/gif;base64,R0lGODlhAAEAAYMAAAAAAFBwas6ADyQVAIxKA97e3pxTBL29vXtCBGaiKobeL4wfVgAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBHgAAACwAAAAAAAEAAQAI/wADCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duxwB6N3Lt6/fv4ADCx5MuLDhw4gTK17MuLHjx5AjS55MubLly5gza97MubPnz6BDix5NurTp06hTq17NurXr17Bjy55Nu7bt27hz697Nu7fv38CDCx9OvLjx48iTK1/OvLnz59CjS59Ovbr169iza9/Ovbv37+DDi/8fT768+fPo06tfz769+/fw48ufT7++/fv48+vfz7+///8ABijggAQWaOCBCCao4IIMNujggxBGKOGEFFZo4YUYZqjhhhx26OGHIIYo4ogklmjiiSimqOKKLLbo4oswxijjjDTWaOONIA6g44464ggbjzz6+BqQOwrpGpE9GokajwQ06WSTQSo5GpNPOhmllKFRWSUBV2L5mZZVdullZ2A+KeaYm5VpZZFoeqYmlGy2ydmbXMYpp2ZgGqCnAWfeaVmee/bpJ2WA6inooJIVyqediFbG454GmMloo5M9uqekSVLq6I6QYjqApn9yeumamYKa6I5PCqCqAIeauhiYq7L/OqmrjcG6aqu0ImarqrjmahiPscbaK23D/lWsfcAGy+usuR3bl7P0JasstEMySxi18kkbLLatccstfNp6ypu2vZJr7X3hkvrpbuaWCli76/qXLpzu3gbvtTsKey6y+a4qLrv9LluvX/f+t+u2+6amrbICxwvAwd+ud7C+A3cbMMMN8wVxwtGi6iTGEbt5Mch2blwxfhPfyvFpCzPcpckOA9hyxrMd7CmSQP4r4MyynryazeriDGbI7fFM9JweNxnrzULrqHOARq9sGtD0Np10nT7rNy8BFMf889WepurvxyoTSeDWXf8Itrpiq9p2z0CeffHbR19GJ9Vclx33gGjr/62201tiPcDbdCOJIM9pf900xkuTPa3U+SHut+JCMz620i5DjvLImWedpdWWu+04wp7zJznNqlk9QOgCvJ24gTwXXrrdc48eqwK4K8B67rpPvjPnomOO+uc6Ni58sLzvnvvrUAPf+uh1K9a3ssmHXv3wMjsvu9ciF3953tQvb7342PN9Neuqp68+kKxjnMD7CcRawPz0zw9//L4XmPLj6/cPevvKup/86kc/AeZPboA7Hsn8x0AkATCA8BsgAQtgwPL9LoHgY1wDN8i+B8aqggKYoP0ieMADna59rvsexlLoQWWJsAALiOEC6se8wznPgyx8ngJV2ELLvVCGM6RfDf9NeMMH5vCItuthsH4oQxqWEHZFBCASdxi8DCpxiSIEohMtmKATrjCJVfwiFa+IxQkO0UFeZNgUrchDMjLuhWdsUBqVtUYxstGNEiRgHBk0x2DVUY1gxKOq4PjECPUxh6xDZBvJGL3meU+KgUxkJBd5xUZm75EonKTlFBlGPFrSYFH0oyYZx0kd3rGFn5RXKI13SkmO0Y6BExzOcrRKShpxlKyMpepoiUlXtjJ0pcxl4Hb5oUPiEpCvRGYsZWm4YtZSkG48gDQPUL9UyvGZ0LziNKlJP2vyEZvZ7OE2q6m5DfUxnC0cZzfLqaFz6g2drCPn7DzkzobBM3Ty5F6J6gn/t3v6cJ3z7BA/+XnFfLJooNhEaEB5uTol9lGh+kQRRD0IURhN9IEVfRFEt8nRjnL0oewUKDj15tGSfjShIeXQRk3KUpAu1Jm9xOiOWNpSlL6UnmsbI49eyFMRntCbE6LTAgfQ06ICtKGWA6qEhNo5ohq1qD9NKUwHF7ihPhWqoVSqIbN6NQ468HtapVBUMehVIrEyrEHlKlnLujW0LlWtVK0aW88qVRHB7Gn4WmtMuWjR8+kNr4MZmvPculUMdg2wghHsXuGGo7uqS1ddHWxdQxQ1vUbUWJHFJGJjVNm4Cg6ylqXrTfcpWcuC1rNtnSxDh7rZd2UWqaYkLIQ621rM/4a2qY0tLWohp1jY7lGjuq0twV471Nwutren9VRxb8QzSPEIAdBFQLmIyzDnqtaczrOujqIr3YT1FmPavayKmhuoHXF3urdVVnhpRF5DmTe66N3tYtfLXFHpSZfvhW58z2vfSA3zuu3sL363C1/v5re7OurUf0fLUAVv6bkF9hyE9SvgBYs3RZa6r4X5K+EDZ9i/DwZwhujkKQ5feMII9uyALyzRnIbJwwYmMIUxuGL2urjEET4xjGlsYRvzOMQyTnFeB2DiZT62vl497QaNy0ElN5DJSz4MW6H8ZCmXlTp4ybKWt8zlLnv5y2AOs5jHTOYym/nMaE6zmtfM5ja7+S/NcI6znOdM5zrb+c54zrOe98znPvv5z4AOtKAHTehCG/rQiE60ohfN6EY7ei0BAQAh+QQBHgAAACw8AGQAGAAYAIMAAABQcGrOgA8kFQCMSgPe3t6cUwS9vb17QgRmoiqG3i+MH1YAAAAAAAAAAAAAAAAIgQABCAQwoKDBggMTKkx48ODChwMbGoQIUSJCigIPEtjIcaPDhxo7cvy4MKRIAiQVmhSZkqHBkxsNyDSQcmXHmTQnRnwJE2dNnid96iwJlIDQi0QL3pzZcqdSjkcHVCwaFePCjlYpYs36cCtXhV6/DhRAVoBYhWXNnh1bdi1bshADAgAh+QQBHgAAACw8AGQAGAAYAIMAAABQcGrOgA8kFQCMSgPe3t6cUwS9vb17QgRmoiqG3i+MH1YAAAAAAAAAAAAAAAAIewABCBxIUOCAgwgPFlxYMGFChhABOEQYkeFEhRUlIiTAsSPHhxY3euwIcmHCkSQphjyI8qNKkyJRlmwYc+RMgidb3hyYU+ZLmiw7GhhqYKfBmkSL/sSJlKhRjUE5Jn1KMGnGiFavMsyqtSDXrgM9gi0odmzYjmbPcoQYEAAh+QQBHgAAACxEAGQAGAAYAIMAAABQcGrOgA8kFQCMSgPe3t6cUwS9vb17QgRmoiqG3i+MH1YAAAAAAAAAAAAAAAAIhgABCBxIUOCAgwgPFlxYMGFChhABOEQYkeFEhRUlIiTAsSPHhxY3euwIcmHCkSQphjyI8qNKgy8BtCRQUiNGgTNr1swZc2dLnTE91iTo0+XNhkFTHiWa1OgAiAKiCiBooKqBoQOlTh1o9WpMglqpWsUqMCzXsV+zSs0Y0SzbhW7fgl0rF0BAACH5BAEeAAAALEQAZAB8AHgAgwAAAFBwas6ADyQVAIxKBN7e3r29vXtCBJxTBGaiKobeL4wfVgAAAAAAAAAAAAAAAAj/AAEIHEiwoMGDCBMqXMiwocOHECNKnEixosWLGDNq3Mixo8ePEAeIHACypMmKI0meXMlyYcqWMGMOfCmzJsiUBHLqzEnTps+JOHfq7PmzqMOgQgkQNco0IVKhS5tKfZqU50ipWGeOrAr1alasVKtG/fozbNKxZG0S3Yk2bVmvAtnCddt07dC5dI3atSoyb9G9Xfv69QlYruDBNQvfPYw4pmK+Khs7niugsoC2klcStXwZb2aYmy1j/lwydOXRpD+m5MwZtVvXB1GvZn3ac2PYBmWPpF2bcWbcBXWL5N3Zt2TgBIVHTp17rvKQtpkDIPr8IXK/1KMn1x6bO+nsxpuH/2/IlTlngucX7kzvsHxq9gDgI1xvGaJ70vDlH6Rf2X5V8/UNpJ9B/AlAUWvefVWgYSk1+NSBoiWY1YKLOWjhThD2ttxgFEJmYYMYToTgeG51qNSHF+rE0Gz9dUciVlw9OFCIAik34HQSGhXjVirO2GONCbJooIsbprWjSDQCkKSNAYpXJFlHDpDkkjkqVOB1JqFIWZNK/hhfhC9aqdOIT76lJXpcJkkmRVdWyZKWjMGnJphlMtRmmDLBuZycXq7pEo853YhlRoAhpMChCqBJG6KJWgcoAYK6yVGhBzGqKGuWOorkmFxuh+dNcyVJUKYCEUdqQ09F+qlqoXo5KqKXcv92KnTDpemlnrjm2iBFCfSaAHwFBFuArwlQJCRBVOqqLJy8+gqssMQau5utOXm67LUONtvrs8FGC9S0LcZ1K7bkDkost8P6ipGMEonqY7X7uXqRsAUQtMC9C9Dr51GPsimvuPAS+G9F9NqLr7500irlwHYO7C7ABHBU8ED45ivsvqj2O9HDXQZcEMcUTSxQxQhrKG2t4ZLn8MoeI3QjQvSWXFydmg7wcrwtvxsxzjsrdLNBMV+c8EXHPsTx0QwL2OlCQQeL8ck2Ly1mzhDPl3SpUifUdAFP2wSyeld3DClxZNM2KEhfT91zQgWWXfbZH6XNdthtu00c3B7JbTXVH3P/avfbkp6kN8/+ceWhhSWGvffaDRt+4plGKk640Y4/jmLifDfOONiO6yndRwaEbsDnUok+OulMmY566qKvvtHPWguLt3Swwyx74K7XfhC9swOYMkS8407X33Tq7jpDxGto/PE+J1808xYlP/PyHP63kOnYZ6996BB1LdV9CW0vvvbdDw2l9QqNr37rD3nfFPgIrb9++SaTvvX9+Nd70N3Cu5X//zFzGW96hxUAGlB/BuHfqhpzQAAK0Gz9gwnSPKYsay2OORNcWwW1Mp7BnY9vycKVBSdHmgxay3McLJMHP7PCC+4va6hrIQkLQj3JyFBgfKthY27YtxzCkHQ8RBbLUzbnuiDqzIXQExtGTJhEJV6EiU3ciBGj2C7JUTEjU7wi5TLXRPgJDn0sBONKvLhDMX4xKRg0o0nISJfKEbEjbsxMHM9oODlWbox3tGEe17jHjgQEACH5BAEeAAAALEQAZAB8AHgAgwAAAFBwas6ADyQVAIxKA97e3pxTBL29vXtCBGaiKobeL4wfVgAAAAAAAAAAAAAAAAj/AAEIHEhQ4ICDCA8WXMiwocOHECNKnEhxYcKEFTNq3MixY8GLCD2KHEnSI0iFJVOqXAkgIYGXMF+ynElzo8uYMGvq3PnwJk4CPIMKbYnwp8yhSFX6NPoSY9KnHJcydQq1KkWpRqla3dqzKFOYWrmK/YjQgFkDMcOOXUsw4Vm0YEOyndu27Nm0cunSdXs3Lkq9YhMKGCwgZt2/gLcKJmx4oNrETxcPbmwwL+SqkgvndGz5cmSEhAUcHuB5bObRpQODJow6teLVg1u7xgxbNGfEs8nivtr59oDQsnPrJm2zd+WDwH0LZ/hYYvPTypcPj2qcKHLGfokvz9x8dGitmfHu/3bNvbp3wuBri9cuvPz44d8th88u3fpv9OZ9x0e8tP752APtx15/EBHon33JCSTgaJQ5ZKB/0CmIH39eHdXVQQ3WFyEAC/qWIUWhJShcgw2mh+FmE4XImnQkomgfgy5GpCKAy7Vo4YsexgjRjLbV6GKJ8lUI1EYxdXjZVEKGVuSE7FW05GDdsYXkiS8pCZORGT0pQJRrTTmAllpy6VCY+XWZVZLYVclkRc1hOddJ96lIUIMiRtTmmoDByeOcLtZZYHVusqXnjHze6OeFTQaIp16DyjkQnSt6ZKWaUJZZ03yU9giAApwqQJCInSoQ6EOTEjBqUJiaGummnX66aqinNv9Uaqw7pQpqq4rSyCqntC4066JJ2foqrhLqCiuwDT3oaqVwNuvssxseCkAC1CZAUAHYZotttdYWR+WQvjIJ7bjkxqmptNxeq2226Xr7pY7FblnuvNCKiG616q5bQLsaKZurvPQGfJK9qxLELwD6bouvSFoRzONkV86o5a+6VhSatgQtoPECGDNsmcMPT5ymqipqydHF2Wa8cccmfbzqwyPzKDLEmZ5MGMsAbMxxyh4jBrLMEZccdIgmb4QytiprjPNIYjb0oUBPAxC1zbpq26tzljoNr9RbT230qlYj6y5HUZe9NdWahs1sov1mzZDZNxYKLkkiqg0w2x01/ejW0nr/DfXZDPGod9vvaR33v4bPnbjFMw6ekeNR9w3434eT2rjbhOO9eOAF7115QX4XJDjmQYW+ueU0fwVtYqa/PTmHI3sJJ+uvn+5QqbKfRPvnEYWO+5nOJiatjJ0/dMDxB2jr+FzD71i8Q8gnn+3ybDWPuqYRRa886cw/T3zFEGk/PfcH0u19+UhZj35Q6q+/U/vuY134n/PHT7/m99tPXf0Okq8/jpn7n0CiR8ACEpB6AhyIARd4QP8lEAAMjOABEPhACTKQgrvDSUQSxsEOssmBSGHKBjtIwqXlzzMihEgJV1iAD/JPLCl8CAtL6EL8+agpAmvOehK4nhwmDoMozI4PoF2HwxeySIgC+yEIoQI3xRGJb+c7UtdqB5HIRREyTRyJFcHnmiyKZIvYi1/rHuLF/41xTFPkXfnOaDu58ZCKZEyjE93HRiLOEXZcXF8dFwLGN6pxIn0U4B5BB8U8PvCJfzxkSgapyCzBsZEdYeQRfxJCo9QnhqWz5CQ1OBRM5saTOwGlFL9yR5WQMpFzOWUpF3nKT7YylK/sYixrokqaBAQAIfkEAR4AAAAsRABkABgAGACDAAAAUHBqzoAPJBUAjEoD3t7enFMEvb29e0IEZqIqht4vjB9WAAAAAAAAAAAAAAAACH0AAQgEMKCgwYIDEypMePDgwocDGxqECFEiQooCDxLYyHGjw4caO3L8uDCkSAIkFZoUmZKhwY4uL5Z8yTHmgIo0N9rEWRBmxIkgcxLYGbRnzZ8yVQolOtOoTqQ3MQIwQNUAU4pVrUKVOrXqVYhZvz70yXUh2bIJz6IVqFZqQAAh+QQBHgAAACw8AGQAGAAYAIMAAABQcGrOgA8kFQCMSgPe3t6cUwS9vb17QgRmoiqG3i+MH1YAAAAAAAAAAAAAAAAIgQABCAQwoKDBggMTKkx48ODChwMbGoQIUSJCigIPEtjIcaPDhxo7cvy4MKRIAiQVmhSZkqHBkxsNyDSQcmXHmTQnRnwJE2dNnid96iwJlIDQi0QL3pzZcqdSjkcHVCwaFePCjlYpYs36cCtXhV6/DhRAVoBYhWXNnh1bdi1bshADAgAh+QQBHgAAACw8AGQAGAAYAIMAAABQcGrOgA8kFQCMSgPe3t6cUwS9vb17QgRmoiqG3i+MH1YAAAAAAAAAAAAAAAAIewABCBxIUOCAgwgPFlxYMGFChhABOEQYkeFEhRUlIiTAsSPHhxY3euwIcmHCkSQphjyI8qNKkyJRlmwYc+RMgidb3hyYU+ZLmiw7GhhqYKfBmkSL/sSJlKhRjUE5Jn1KMGnGiFavMsyqtSDXrgM9gi0odmzYjmbPcoQYEAAh+QQBHgAAACxEAGQAdAA0AIMAAABQcGrOgA8kFQCMSgPe3t6cUwS9vb17QgRmoiqMH1YAAAAAAAAAAAAAAAAAAAAI7wABCBxIUOCAgwgPFlzIsKHDhxAjSpwoMWFCihgzatzIcaBFhB1Dihyp8aNCkihTkkxIoKXLlhdVypwZkeVLlzFp6txpEOFNnCB5Cp1p82fOoUg5Hv0JM2jSpxmXMj0KtSpEqUadWt3aEOtNqlzD9jwp8CVYsWgBeD2bNuxarW3RviUbF62AuwIIGthrgG3dqnjzDuTbF+7frYH18vV7OGniwYsNN4b6ePLkypYPY85cdzPnz6BDix5NurTp06hTq17NurXr17Bjy55Nu7bt27hz697Nu7fv38CDCx8O2/NC472RE1S+m7lA57mhBw4IACH5BAEeAAAALEQAZAB8AHgAgwAAAFBwas6ADyQVAIxKBN7e3r29vXtCBJxTBIwfVgAAAAAAAAAAAAAAAAAAAAAAAAj/AAEIHEiwoMGDCBMqXMiwocOHECNKnEixosWLGDNq3Mixo8ePEAeIHACypMmKI0meXMlyYcqWMGMOfCmzJsiUBHLqzEnTps+JOHfq7PmzqMOgQgkQNco0IVKhS5tKfZqU50ipWGeOrAr1alasVKtG/fozbNKxZG0S3Yk2bVmvAtnCddt07dC5dI3atSoyb9G9Xfv69QlYruDBNQvfPYw4pmK+Khs7niugsoC2klcStXwZb2aYmy1j/lwydOXRpD+m5MwZtVvXB1GvZn3ac2PYBmWPpF2bcWbcBXWL5N3Zt2TgBIVHTp17rvKQtpkDIPr8IXK/1KMn1x6bO+nsxpuH/2/IlTlngucX7kzvsHxq9gDgI1xvGaJ70vDlH6Rf2X5V8/UNpJ9B/AlAUWvefVWgYSk1+NSBoiWY1YKLOWjhThD2ttxgFEJmYYMYToTgeG51qNSHF+rE0Gz9dUciVlw9OFCIAik34HQSGhXjVirO2GONCbJooIsbprWjSDQCkKSNAYpXJFlHDpDkkjkqVOB1JqGYYJLbvWilTiM++ZaWDHGplZcJXVklS1qiaSaQaM4HZoRxgtZmmT8GFySPOd2IZUaAIZQfcU029JSfa3IU6EGDEjrkUXwSgGidHi1qUKOEQofknC06Sdhcb8ZXqKOdRiQkQVS2qeqqDmraIHwFxP9awIeuwpcqq7iq6uqpA8k6q4W1FnprrsQCa52FsMpK67HDCZtnsdAaC6mDyca6rEQyShTqtnli5CtBCYSbgK9huhoqnjnJme5+3V707UDijitrucxK2W579yqZ77kTvStQvOTSKSZC2UbE7boE5kuRvwAAPK/AFPGKL8IFHUwAQzci5GvAGmIkMXn7hkyxoIUytPHDHV/0MboXszuyjy9fWvJCJ8dKr0UrqydyywnHXFDGB9VcwM0/8fulz6hySqqjf4JkdJoKwyzp0qQ2/dHT6vIMdZ9UM53oSVi7rHXWXXtNKUth9zy2zlx5KK2CUR+9ttxRXgs30mzPvXXbuhr/Gffe/rV9IpnSeWTA4QYULhXiiSvOFOOOP4545BsBrZCvVhdueUKYf0355hor63nkoAct+tmDlV3cAKVTjnHZObsuIuy7zSy7RKrHLt19CTHu++/AHw4R0RP+t1DwyAM/PMR+J8VQ8tBP/hDxMBqvUPTRL59y4UJ3730BJNOW+Vffl79x+KyNn5X57IPPKG/qY9W++ehTD+XOXa6af9bMWZx/33ASU9ruprdh3elMAvxbifCHQADiaDwDzEwExYa+20kNI6Fq3WcmqLYKWlBfeJuY3jQoQQXmjX8f5GDFGGhBFSbNZy70SwzjwsIPamSGNjSYCXOYERzyUIQ/XKHzL2DCuxIOsSVFlEwSTbJExDTRadZzouD0xpEpUrF5bVuJFY2YRbBNkYtP3MgWPxIQACH5BAEeAAAALEQAZAB8AHgAgwAAAFBwas6ADyQVAIxKA97e3pxTBL29vXtCBGaiKobeL4wfVgAAAAAAAAAAAAAAAAj/AAEIHEhQ4ICDCA8WXMiwocOHECNKnEhxYcKEFTNq3MixY8GLCD2KHEnSI0iFJVOqXAkgIYGXMF+ynElzo8uYMGvq3PnwJk4CPIMKbYnwp8yhSFX6NPoSY9KnHJcydQq1KkWpRqla3dqzKFOYWrmK/YjQgFkDMcOOXUsw4Vm0YEOyndu27Nm0cunSdXs3Lkq9YhMKGCwgZt2/gLcKJmx4oNrETxcPbmwwL+SqkgvndGz5cmSEhAUcHuB5bObRpQODJow6teLVg1u7xgxbNGfEs8nivtr59oDQsnPrJm2zd+WDwH0LZ/hYYvPTypcPj2qcKHLGfokvz9x8dGitmfHu/3bNvbp3wuBri9cuvPz44d8th88u3fpv9OZ9x0e8tP752APtx15/EBHon33JCSTgaJQ5ZKB/0CmIH39eHdXVQQ3WFyEAC/qWIUWhJShcgw2mh+FmE4XImnQkomgfgy5GpCKAy7Vo4YsexgjRjLbV6GKJ8lUI1EYxdXjZVEKGVuSE7FW05GDdsYXkiS8pCZORGT0pQJRrTTmAllpy6VCY+XWZVZLYVclkRc1hOddJ96lIUIMiRtTmmoDByeOcLtZZYHVusqXnjHze6OeFTQaIp16DyjkQnSt6ZKWaUJZZ03yU9giAApwqQJCInSoQ6EOTEjBqUJiaGummnX66aqinNv9Uaqw7pQpqq4rSyCqntC4066JJ2foqrhLqCiuwDT3oaqVwNuvssxseCkAC1CZAUAHYZotttdYWR+WQvjIJ7bjkxqmptNxeq2226Xr7pY7FblnuvNCKiG616q5bQLsaKZurvPQGfJK9qxLELwD6bouvSFoRzONkV86o5a+6yjijtgQtoPEC2kprp2UOPzxxmqqqqGVFPGI80MYcZ+vxn4iFzOPIEGdKsaYWq6iyQCx3XDBvMa/6MMkzR2yy0TjveHG2GW/sc8XucvShQFMDUDVHIj4NcKL9WtpQ1WDD21HWLiMbNZFih33jSGRj26tzXjOkNrgFXb1R2wW8zWbcVIv/La3dfa+ttIpiUvfe137/HDjdiAtO6oyFnz1R1X+LXSjjg4cYedeHy5041ItHBHhBPG4e1OiNYx5uzV9BmxjqnjtOOslewvm65RCNXmrtJ90uu+i4x/tVdrYD9vLjoDt0wPIHaGv6XMc7FD1BzDef7fNsTc+Q9gJV7zzfdHE/e/INeX89+AeWJH76Na3P/kzuv79S/PIzh3509UueEfb5H8c13J3rn4Pu5z8Bdq96CExg9fhnwAMq8IHMY2ADIUjBA0jQgBWE4AX1wpSIJOyDINxbAMfSQYiA8ITrEuH/5lLCh6DwhQVQYWla6BAYolCG9VuPwP63ngbqUGCp2yBkn34YsCASMDVEpJcRR8jCtAVPIpRTHBKd+DuKRJF8npnbSK6YNNdoUSRc9OETgSc72PmoipOjoureZ8YxqVGMaITiGw3YxtTJSorsq2Ps1ki/GY4xd5/rIhv/+JAwNjAlejxkRxKpSLTFsZEkYWR9aMgTSs7GkjrB5BR/ghRN+pGTQ/EkYIb3SDCSMjekXKNKUonKU+6ElZd0ZSZluZKAAAA7'
         };
 
-        const animationFiles = Object.fromEntries(
-            Object.keys(gifUrls).map(key => [key, `assets/animations/${key}.gif`])
+        gifUrls.meow = gifUrls.idle;
+        gifUrls.eat = gifUrls.stand;
+
+        const animationKeys = Array.from(new Set([...Object.keys(gifUrls), 'meow', 'eat']));
+        const animationFileCandidates = Object.fromEntries(
+            animationKeys.map(key => [key, [
+                `assets/animations/${key}-animation.gif`,
+                `assets/animations/${key}.gif`
+            ]])
         );
 
         const textures = {
@@ -1031,9 +1064,12 @@
             pillow: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAASCAYAAABB7B6eAAAAg0lEQVR4nGNgGOqAEZtgVM+l/+QauKxED8VMFA4lBuOyiAWbpJubLtkG79p1GYXPBGPAXE+J4cj6YeYx4VVNBYA1iBgYGBg0JEk37MZzTLGB8wE215ADBjQOTpJq2I3nDOZEW4BNMTmA5kEEtwCWtdFzIqkAph9vUUGpJciA5qUpzQEAKN8oJG9daB4AAAAASUVORK5CYII='
         };
 
+        textures.foodPile = textures.food;
+
         const customTextureFiles = {
-            food: 'assets/textures/food/food.png',
-            toy: 'assets/textures/ball/ball.png'
+            food: 'assets/textures/food/70_meatball_dish.png',
+            foodPile: 'assets/textures/food/03_dish_pile.png',
+            toy: 'assets/textures/ball/orange_animation.gif'
         };
 
         const roomItemTextureKeys = {
@@ -1042,6 +1078,29 @@
             pillow: 'pillow',
             ball: 'toy'
         };
+
+        const foodDishTextures = [
+            'assets/textures/food/70_meatball_dish.png',
+            'assets/textures/food/72_nacho_dish.png',
+            'assets/textures/food/76_pudding_dish.png',
+            'assets/textures/food/86_roastedchicken_dish.png',
+            'assets/textures/food/89_salmon_dish.png',
+            'assets/textures/food/96_steak_dish.png',
+            'assets/textures/food/04_bowl.png'
+        ];
+        const platePileTexture = 'assets/textures/food/03_dish_pile.png';
+        let availableFoodTextures = [];
+        let foodTextureIndex = 0;
+
+        function registerFoodTexture(url) {
+            if (url && !availableFoodTextures.includes(url)) {
+                availableFoodTextures.push(url);
+            }
+        }
+
+        foodDishTextures.forEach(registerFoodTexture);
+        registerFoodTexture(textures.food);
+        textures.foodPile = platePileTexture;
 
         // Room background
         const roomBgUrl = textures.room;
@@ -1059,36 +1118,46 @@
             if (!mollyGif) return;
 
             const fallback = gifUrls[gifName] || gifUrls.idle;
-            const candidate = animationFiles[gifName];
-            const availability = animationFileAvailability[gifName];
+            const candidates = animationFileCandidates[gifName] || [];
+            let candidateIndex = 0;
 
             mollyGif.onerror = null;
             mollyGif.onload = null;
 
-            if (!candidate || availability === false) {
-                mollyGif.src = fallback;
-                return;
-            }
+            const tryNextCandidate = () => {
+                while (candidateIndex < candidates.length) {
+                    const candidate = candidates[candidateIndex++];
+                    if (!candidate) continue;
+                    const availability = animationFileAvailability[candidate];
+                    if (availability === false) {
+                        continue;
+                    }
+                    if (availability === true) {
+                        mollyGif.src = candidate;
+                        return;
+                    }
 
-            if (availability === true) {
-                mollyGif.src = candidate;
-                return;
-            }
+                    mollyGif.onload = () => {
+                        animationFileAvailability[candidate] = true;
+                        mollyGif.onload = null;
+                        mollyGif.onerror = null;
+                    };
 
-            mollyGif.onload = () => {
-                animationFileAvailability[gifName] = true;
-                mollyGif.onload = null;
+                    mollyGif.onerror = () => {
+                        animationFileAvailability[candidate] = false;
+                        tryNextCandidate();
+                    };
+
+                    mollyGif.src = candidate;
+                    return;
+                }
+
                 mollyGif.onerror = null;
+                mollyGif.onload = null;
+                mollyGif.src = fallback;
             };
 
-            mollyGif.onerror = () => {
-                animationFileAvailability[gifName] = false;
-                mollyGif.onload = null;
-                mollyGif.onerror = null;
-                mollyGif.src = fallback;
-            };
-
-            mollyGif.src = candidate;
+            tryNextCandidate();
         }
 
         function loadCustomTexture(textureKey, url) {
@@ -1096,8 +1165,12 @@
             img.onload = () => {
                 textures[textureKey] = url;
                 if (textureKey === 'food') {
-                    const dropImg = document.getElementById('foodDropImg');
-                    if (dropImg) dropImg.src = textures.food;
+                    availableFoodTextures = [url, ...availableFoodTextures.filter(tex => tex !== url)];
+                    setFoodDropTexture();
+                }
+                if (textureKey === 'foodPile') {
+                    textures.foodPile = url;
+                    renderPlatePiles();
                 }
                 setShopTextures();
                 renderRoomItems();
@@ -1109,6 +1182,24 @@
             Object.entries(customTextureFiles).forEach(([key, url]) => loadCustomTexture(key, url));
         }
 
+        function getNextFoodTexture() {
+            if (!availableFoodTextures.length) return textures.food;
+            const texture = availableFoodTextures[foodTextureIndex % availableFoodTextures.length];
+            foodTextureIndex = (foodTextureIndex + 1) % availableFoodTextures.length;
+            return texture;
+        }
+
+        function setFoodDropTexture() {
+            const dropImg = document.getElementById('foodDropImg');
+            if (dropImg) {
+                dropImg.src = getNextFoodTexture();
+                dropImg.onerror = () => {
+                    dropImg.onerror = null;
+                    dropImg.src = textures.food;
+                };
+            }
+        }
+
         // Game State
         const gameState = {
             hearts: 0,
@@ -1118,6 +1209,7 @@
                 rest: 60,
                 life: 90
             },
+            lastFedAt: Date.now(),
             lastUpdate: Date.now(),
             unlockedMemories: [0],
             memoryCosts: [
@@ -1157,7 +1249,7 @@
         // Action configurations with GIF mappings
         const actions = {
             cuddle: { icon: 'heart', text: 'Molly feels loved!', mood: 15, gif: 'idle' },
-            feed: { icon: 'food', text: 'Yum! Molly is full!', food: 20, gif: 'stand' },
+            feed: { icon: 'food', text: 'Yum! Molly is full!', food: 20, gif: 'eat', duration: 2800 },
             play: { icon: 'play', text: 'Molly had so much fun!', mood: 20, rest: -10, gif: 'play' },
             sleep: { icon: 'sleep', text: 'Sweet dreams, Molly!', rest: 25, gif: 'sleep' },
             walk: { icon: 'walk', text: 'Molly enjoyed the fresh air!', mood: 10, life: 10, gif: 'walk' },
@@ -1183,16 +1275,20 @@
             bathe: 'M12 22C16.97 22 21 17.97 21 13C21 11.5 20.64 10.07 20 8.79L18.5 5.5L16.5 8.5L14.5 5.5L12.5 8.5L10.5 5.5L8.5 8.5L6.5 5.5L5 8.79C4.36 10.07 4 11.5 4 13C4 17.97 8.03 22 12 22M12 20C9.11 20 6.7 17.89 6.11 15H17.89C17.3 17.89 14.89 20 12 20Z'
         };
 
+        const BORED_MEOW_DELAY_MS = 25000;
+
         // Current animation state
         let currentGif = 'idle';
         let animationTimeout = null;
+        let boredomInterval = null;
+        let lastInteraction = Date.now();
 
         // Initialize
         function init() {
             // Set background images
             document.getElementById('roomBg').src = roomBgUrl;
             setMollyGifSource('idle');
-            document.getElementById('foodDropImg').src = textures.food;
+            setFoodDropTexture();
             loadCustomTextures();
 
             loadGame();
@@ -1202,6 +1298,7 @@
             updateUI();
             renderMemories();
             setupEventListeners();
+            startBoredomLoop();
             startDecayLoop();
         }
 
@@ -1214,6 +1311,7 @@
                 gameState.hearts = parsed.hearts || 0;
                 gameState.stats = parsed.stats || gameState.stats;
                 gameState.lastUpdate = parsed.lastUpdate || Date.now();
+                gameState.lastFedAt = parsed.lastFedAt || parsed.lastUpdate || gameState.lastUpdate;
                 gameState.unlockedMemories = parsed.unlockedMemories || [0];
                 gameState.roomItems = parsed.roomItems || [];
             }
@@ -1264,6 +1362,8 @@
                 const cost = parseInt(btn.dataset.cost);
                 btn.disabled = gameState.hearts < cost;
             });
+
+            renderPlatePiles();
         }
 
         // Change Molly's animation
@@ -1295,6 +1395,23 @@
                     });
                 }, duration);
             }
+        }
+
+        function markInteraction() {
+            lastInteraction = Date.now();
+        }
+
+        function startBoredomLoop() {
+            if (boredomInterval) {
+                clearInterval(boredomInterval);
+            }
+            boredomInterval = setInterval(() => {
+                if (currentGif !== 'idle') return;
+                if (Date.now() - lastInteraction >= BORED_MEOW_DELAY_MS) {
+                    setMollyAnimation('meow', 1800);
+                    markInteraction();
+                }
+            }, 5000);
         }
 
         // Render memories grid
@@ -1401,6 +1518,41 @@
             });
         }
 
+        function getPlatePileCount() {
+            const lastFed = gameState.lastFedAt || gameState.lastUpdate || Date.now();
+            const daysSinceFed = (Date.now() - lastFed) / (1000 * 60 * 60 * 24);
+            return Math.min(3, Math.floor(daysSinceFed));
+        }
+
+        function renderPlatePiles() {
+            const pile = document.getElementById('platePile');
+            if (!pile) return;
+
+            const count = getPlatePileCount();
+            pile.innerHTML = '';
+            if (count <= 0) {
+                pile.classList.remove('visible');
+                return;
+            }
+
+            pile.classList.add('visible');
+            for (let i = 0; i < count; i++) {
+                const img = document.createElement('img');
+                img.src = textures.foodPile || textures.food;
+                img.alt = 'Piled plate';
+                img.style.transform = `translateY(${i * -2}px)`;
+                img.style.zIndex = String(5 + i);
+                img.onerror = () => {
+                    img.onerror = null;
+                    img.src = textures.food;
+                };
+                if (i > 0) {
+                    img.style.marginLeft = '-4px';
+                }
+                pile.appendChild(img);
+            }
+        }
+
         function addRoomItem(itemName) {
             const x = 20 + Math.random() * 60;
             const y = 55 + Math.random() * 30;
@@ -1419,14 +1571,15 @@
             });
         }
 
-        function showFoodDrop() {
+        function showFoodDrop(duration = 2000) {
             const drop = document.getElementById('foodDrop');
             if (!drop) return;
+            setFoodDropTexture();
             drop.classList.remove('visible');
             // restart animation
             void drop.offsetWidth;
             drop.classList.add('visible');
-            setTimeout(() => drop.classList.remove('visible'), 1200);
+            setTimeout(() => drop.classList.remove('visible'), Math.min(duration, 4000));
         }
 
         // Unlock memory
@@ -1498,6 +1651,7 @@
 
             // Tap Molly
             document.getElementById('mollyCircle').addEventListener('click', (e) => {
+                markInteraction();
                 gameState.hearts += 1;
                 createFloatingHeart(e);
                 createParticles(e);
@@ -1540,16 +1694,21 @@
         function performAction(actionName) {
             const action = actions[actionName];
             if (!action) return;
+            markInteraction();
+            const duration = action.duration || 3000;
 
             // Apply effects
             if (action.food) gameState.stats.food = Math.min(100, gameState.stats.food + action.food);
             if (action.mood) gameState.stats.mood = Math.min(100, gameState.stats.mood + action.mood);
             if (action.rest) gameState.stats.rest = Math.min(100, gameState.stats.rest + action.rest);
             if (action.life) gameState.stats.life = Math.min(100, gameState.stats.life + action.life);
-            if (actionName === 'feed') showFoodDrop();
+            if (actionName === 'feed') {
+                gameState.lastFedAt = Date.now();
+                showFoodDrop(duration);
+            }
 
             // Change Molly's animation
-            setMollyAnimation(action.gif);
+            setMollyAnimation(action.gif, duration);
 
             // Show animation overlay
             showActionAnimation(action);
@@ -1560,10 +1719,14 @@
 
         // Buy shop item
         function buyItem(itemName, cost) {
+            markInteraction();
             if (gameState.hearts >= cost) {
                 const item = shopItems[itemName];
                 gameState.hearts -= cost;
                 gameState.stats[item.stat] = Math.min(100, gameState.stats[item.stat] + item.value);
+                if (item.stat === 'food') {
+                    gameState.lastFedAt = Date.now();
+                }
                 addRoomItem(itemName);
                 saveGame();
                 updateUI();
