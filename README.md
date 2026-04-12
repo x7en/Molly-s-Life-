@@ -6,6 +6,7 @@ Add your memory photos under `memories/memory-<index>.jpg` (starting at 1). The 
 
 ## Animations & textures
 
-- Put custom Molly GIFs in `assets/animations/` named after their state (for example `idle.gif`, `play.gif`, `sleep.gif`).
-- Override the food drop or toy/ball art with `assets/textures/food/food.png` and `assets/textures/ball/ball.png`.
+- Put custom Molly GIFs in `assets/animations/` named after their state (for example `idle.gif`, `play.gif`, `sleep.gif`, `walk.gif`, `stand.gif`, `eat.gif`, `meow.gif`). Files ending in `-animation.gif` are also picked up automatically.
+- Food drops cycle through the textures in `assets/textures/food/` (dish art such as `70_meatball_dish.png`). A pile indicator uses `assets/textures/food/03_dish_pile.png` when Molly has not been fed for a while.
+- Override the toy/ball with `assets/textures/ball/orange_animation.gif`.
 - Missing files safely fall back to the built-in animations and textures. See `assets/README.md` for more details.
