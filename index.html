@@ -7,21 +7,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cream: #FFF8E7;
-            --cream-dark: #FFE4C4;
-            --orange: #FF9F5A;
-            --orange-dark: #E8843C;
-            --pink: #FF7AA2;
-            --blue: #5AA9FF;
-            --green: #7ED957;
-            --red: #FF6B6B;
-            --purple: #B8A9FF;
-            --teal: #5AD4C4;
-            --yellow: #FFD93D;
-            --brown: #8B5A3C;
-            --text: #5A4A3A;
-            --text-light: #8B7A6A;
-            --shadow: rgba(139, 90, 60, 0.15);
+            --cream: #FFF3D9;
+            --cream-dark: #FFE1B3;
+            --orange: #F2852F;
+            --orange-dark: #C86B24;
+            --pink: #E75E93;
+            --blue: #4C96F8;
+            --green: #61C74E;
+            --red: #E55555;
+            --purple: #A996FF;
+            --teal: #49C4B7;
+            --yellow: #F5C531;
+            --brown: #6E4B2F;
+            --text: #3B2B1B;
+            --text-light: #6B5746;
+            --shadow: rgba(110, 75, 47, 0.18);
         }
 
         * {
@@ -234,6 +234,7 @@
             overflow: hidden;
             padding: 10px;
             backdrop-filter: blur(2px);
+            touch-action: manipulation;
         }
 
         .molly-circle:active {
@@ -398,6 +399,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 4px 0 var(--shadow);
+            touch-action: manipulation;
         }
 
         .care-btn:active {
@@ -408,6 +410,13 @@
         .care-btn.active-action {
             border-color: var(--orange);
             background: var(--cream-dark);
+        }
+
+        .care-btn:disabled,
+        .care-btn.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         .care-btn svg {
@@ -732,6 +741,7 @@
             gap: 6px;
             box-shadow: 0 4px 0 #C94A7A;
             transition: all 0.2s ease;
+            touch-action: manipulation;
         }
 
         .shop-btn:active {
@@ -861,6 +871,11 @@
             box-shadow: 0 4px 0 var(--shadow);
         }
 
+        .memory-slot:focus {
+            outline: 2px solid var(--orange);
+            outline-offset: 2px;
+        }
+
         .memory-slot.unlocked {
             background: white;
             border-color: var(--orange);
@@ -887,6 +902,23 @@
             font-size: 12px;
             text-align: center;
             padding: 16px;
+        }
+
+        .memory-spinner {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 3px solid var(--cream-dark);
+            border-top-color: var(--orange);
+            animation: spin 0.9s linear infinite;
+        }
+
+        .asset-placeholder {
+            background: var(--cream-dark);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .memory-lock {
@@ -941,6 +973,16 @@
             padding: 8px 24px;
             border-radius: 12px;
             transition: all 0.2s ease;
+            touch-action: manipulation;
+            /* Reset <button> defaults */
+            background: none;
+            border: none;
+            outline: none;
+            font: inherit;
+        }
+        .nav-item:focus-visible {
+            outline: 2px solid var(--orange);
+            outline-offset: 2px;
         }
 
         .nav-item svg {
@@ -1086,27 +1128,27 @@
                 <div class="care-section">
                     <p class="care-title">CARE ACTIONS</p>
                     <div class="care-grid">
-                        <button class="care-btn cuddle" data-action="cuddle">
+                        <button class="care-btn cuddle" data-action="cuddle" aria-label="Cuddle Molly">
                             <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                             <span class="care-label">Cuddle</span>
                         </button>
-                        <button class="care-btn feed" data-action="feed">
+                        <button class="care-btn feed" data-action="feed" aria-label="Feed Molly">
                             <svg viewBox="0 0 24 24"><path d="M11 18H13V16H11V18M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2M12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20M12 6C9.33 6 7.2 8.03 7.04 10.67C7.03 10.78 7.12 10.88 7.23 10.88H8.72C8.83 10.88 8.92 10.8 8.95 10.7C9.22 9.33 10.47 8.25 12 8.25C13.87 8.25 15.4 9.78 15.4 11.65C15.4 13.03 14.56 14.22 13.36 14.77C13.16 14.86 13.03 15.06 13.03 15.28V16.5C13.03 16.78 13.25 17 13.53 17H14.97C15.25 17 15.47 16.78 15.47 16.5V15.72C15.47 15.5 15.6 15.3 15.8 15.21C17.53 14.44 18.75 12.7 18.75 10.65C18.75 7.89 16.21 6 12 6Z"/></svg>
                             <span class="care-label">Feed</span>
                         </button>
-                        <button class="care-btn play" data-action="play">
+                        <button class="care-btn play" data-action="play" aria-label="Play with Molly">
                             <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2M12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20M10 16.5L16 12L10 7.5V16.5Z"/></svg>
                             <span class="care-label">Play</span>
                         </button>
-                        <button class="care-btn sleep" data-action="sleep">
+                        <button class="care-btn sleep" data-action="sleep" aria-label="Put Molly to sleep">
                             <svg viewBox="0 0 24 24"><path d="M9 21H15V23H9V21M11 18H13V16H11V18M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2M12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20M12 6C9.33 6 7.2 8.03 7.04 10.67C7.03 10.78 7.12 10.88 7.23 10.88H8.72C8.83 10.88 8.92 10.8 8.95 10.7C9.22 9.33 10.47 8.25 12 8.25C13.87 8.25 15.4 9.78 15.4 11.65C15.4 13.03 14.56 14.22 13.36 14.77C13.16 14.86 13.03 15.06 13.03 15.28V16.5C13.03 16.78 13.25 17 13.53 17H14.97C15.25 17 15.47 16.78 15.47 16.5V15.72C15.47 15.5 15.6 15.3 15.8 15.21C17.53 14.44 18.75 12.7 18.75 10.65C18.75 7.89 16.21 6 12 6Z"/></svg>
                             <span class="care-label">Sleep</span>
                         </button>
-                        <button class="care-btn walk" data-action="walk">
+                        <button class="care-btn walk" data-action="walk" aria-label="Walk with Molly">
                             <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2M12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20M12 6C9.33 6 7.2 8.03 7.04 10.67C7.03 10.78 7.12 10.88 7.23 10.88H8.72C8.83 10.88 8.92 10.8 8.95 10.7C9.22 9.33 10.47 8.25 12 8.25C13.87 8.25 15.4 9.78 15.4 11.65C15.4 13.03 14.56 14.22 13.36 14.77C13.16 14.86 13.03 15.06 13.03 15.28V16.5C13.03 16.78 13.25 17 13.53 17H14.97C15.25 17 15.47 16.78 15.47 16.5V15.72C15.47 15.5 15.6 15.3 15.8 15.21C17.53 14.44 18.75 12.7 18.75 10.65C18.75 7.89 16.21 6 12 6Z"/></svg>
                             <span class="care-label">Walk</span>
                         </button>
-                        <button class="care-btn bathe" data-action="bathe">
+                        <button class="care-btn bathe" data-action="bathe" aria-label="Bathe Molly">
                             <svg viewBox="0 0 24 24"><path d="M12 22C16.97 22 21 17.97 21 13C21 11.5 20.64 10.07 20 8.79L18.5 5.5L16.5 8.5L14.5 5.5L12.5 8.5L10.5 5.5L8.5 8.5L6.5 5.5L5 8.79C4.36 10.07 4 11.5 4 13C4 17.97 8.03 22 12 22M12 20C9.11 20 6.7 17.89 6.11 15H17.89C17.3 17.89 14.89 20 12 20Z"/></svg>
                             <span class="care-label">Bathe</span>
                         </button>
@@ -1189,18 +1231,18 @@
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <div class="nav-item active" data-section="home">
+            <button class="nav-item active" type="button" data-section="home" aria-label="Home">
                 <svg viewBox="0 0 24 24"><path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z"/></svg>
                 <span>Home</span>
-            </div>
-            <div class="nav-item" data-section="shop">
+            </button>
+            <button class="nav-item" type="button" data-section="shop" aria-label="Shop">
                 <svg viewBox="0 0 24 24"><path d="M19 6H16C16 3.79 14.21 2 12 2C9.79 2 8 3.79 8 6H5C3.9 6 3 6.9 3 8V20C3 21.1 3.9 22 5 22H19C20.1 22 21 21.1 21 20V8C21 6.9 20.1 6 19 6M12 4C13.1 4 14 4.9 14 6H10C10 4.9 10.9 4 12 4M19 20H5V8H19V20M12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10Z"/></svg>
                 <span>Shop</span>
-            </div>
-            <div class="nav-item" data-section="memories">
+            </button>
+            <button class="nav-item" type="button" data-section="memories" aria-label="Memories">
                 <svg viewBox="0 0 24 24"><path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19M8.5 13.5L11 16.5L14.5 12L19 18H5L8.5 13.5Z"/></svg>
                 <span>Memories</span>
-            </div>
+            </button>
         </div>
     </div>
 
@@ -1229,23 +1271,81 @@
     </div>
 
     <!-- Toast -->
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
-        // GIF Data URLs (backgrounds removed, transparent)
+    (function () {
+        // FIX: refreshed asset constants and placeholders
+        const TRANSPARENT_GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+        const ASSET_TIMEOUT_MS = 2000;
+        const SAVE_DEBOUNCE_MS = 2000;
+        const HEART_TAP_DEBOUNCE_MS = 140;
+        const DECAY_INTERVAL_MS = 5000;
+        const DECAY_RATES = { food: 0.5, mood: 0.3, rest: 0.4, life: 0.2 };
+        const OFFLINE_DECAY_RATE = 0.5;
+        const LIFE_DECAY_SCALE = 0.5;
+        const MAX_STAT = 100;
+        const MIN_STAT = 0;
+        const BORED_MEOW_DELAY_MS = 25000;
+        const HAPTIC_SHORT = 30;
+        const MEMORY_SPINNER = '<div class="memory-spinner" aria-hidden="true"></div>';
+
+        /**
+         * @param {string} label
+         * @param {string} bg
+         * @param {string} fg
+         * @returns {string} data URL SVG placeholder
+         */
+        function createPlaceholderDataUrl(label = '🐾', bg = '#FFF3D9', fg = '#3B2B1B') {
+            const encodedLabel = encodeURIComponent(label);
+            return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><rect width='160' height='160' rx='22' ry='22' fill='${encodeURIComponent(bg)}'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='60' fill='${encodeURIComponent(fg)}'>${encodedLabel}</text></svg>`;
+        }
+
+        const PLACEHOLDER_IMG = createPlaceholderDataUrl('🐱');
+        const PLACEHOLDER_TEXTURE = createPlaceholderDataUrl('🖼️', '#FFE1B3', '#3B2B1B');
+
+        /**
+         * Debounce helper used for saves and UI events.
+         * @template T
+         * @param {(arg?: T) => void} fn
+         * @param {number} wait
+         * @returns {(arg?: T) => void}
+         */
+        function debounce(fn, wait) {
+            let timeoutId;
+            return (arg) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => fn(arg), wait);
+            };
+        }
+
+        /**
+         * Safe clone utility for state snapshots.
+         * @template T
+         * @param {T} value
+         * @returns {T}
+         */
+        function safeClone(value) {
+            if (typeof structuredClone === 'function') return structuredClone(value);
+            return JSON.parse(JSON.stringify(value));
+        }
+
+        function clampStat(value) {
+            return Math.min(MAX_STAT, Math.max(MIN_STAT, value));
+        }
+
+        // GIF Data URLs (valid placeholders; external files preferred)
         const gifUrls = {
-            idle: 'data:image/gif;base64,R0lGODlhAAEAAYMAAAAAAFBwas6ADyQVAIxKBN7e3pxTBL29vXtCBGaiKobeL4wfVgAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBCgAAACwAAAAAAAEAAQAI/wADCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duxwB6N3Lt6/fv4ADCx5MuLDhw4gTK17MuLHjx5AjS55MubLly5gza97MubPnz6BDix5NurTp06hTq17NurXr17Bjy55Nu7bt27hz697Nu7fv38CDCx9OvLjx48iTK1/OvLnz59CjS59Ovbr169iza9/Ovbv37+DDi/8fT768+fPo06tfz769+/fw48ufT7++/fv48+vfz7+///8ABijggAQWaOCBCCao4IIMNujggxBGKOGEFFZo4YUYZqjhhhx26OGHIIYo4ogklmjiiSimqOKKLLbo4oswxijjjDTWaOONOOao44489ujjj0AGKeSQRBZp5JFIJqnkkkw26eSTUEa52QBUDsBYlVZKGRiWV1ap5ZZeLsbll3+NqZiZZGIpwJoCoAmYmmy6+SSca8rpF51thiklnnb2xaeeUf5JJWGCZukknmwmmuege2FJwKMEJNonkogqWiegjkIqKaBMVmopmpk+uimjh1Zp6aeYVglppHFyumSorK7/uSqWtNY6wKyuKglrorjaamuvhja5K5vA+grrpEcOKyukxv7KbK5Jwgrsqrxq2mqtUEr7LJXUEmvtpdjOqeqq2976rQDdgktrtuOSS4Cy6J7rK7vNnqpouooia2SzVNpbrain6lskvwP46y3AqJIqLL8GL4twvtBS2m6siipgsQINC3AxxtcGKzG35ya6ccYjd9zpxPaWbLDKi3qcLMqnspzyxaO6LKSn/iagcwKJFuDzzz7vzLPJL/ebMZtC9wz0z0kTva+pR6/Z9JpLM71zzR8XHLUAUwtQddBXOz0w1Fuz+XUBC6S9ANBYF6112VR/rfbaP7f9tNFwey232myL/00kzhmfPXff6p6MN9xn273w4WUn7verZCP+teKGvy151ZQP6WvG+GYsMJCbN9x5w5//GLrBoxtcuo+n+5u6v6vniOfr9rrrbuw8zh6y6LYDW/m/FHPee7m/Hxw878O/G7HpMDt8vMEHRH8A0NIfgPuN8NJ+avXUS3+9jdnvDr303Uf/fY3hP5wx9z9Xfz6Muj+svcGEt/x35PjO72/9778YP8X6sxf/lqej/wEvb3HzWeYK2DzXie9o1Vug7BpYuweuT3oSxBG8Kqi+rUXwcQwEWQctFcDtYRCE6MOfBRHoOQKm8HAlZGHCbDZBGK5QhrBzIY0MiEO49U9FPFRd5P9Y+MMUBTGHjENgEVF0RHsBbmtLPFETAzZEJerQf1V0XtmeOEPQZTFeI0Si5VqosNx9MYYt2+IVZYQzNHIRYmXc0RvVmETn+Y55dZRhG20XRRPNEYpn5OMaY/THqO3xdoOE3xeJuMiO9bFEhTzaG+eFxzH2cJK28mIeGblJRyYSi53M2/+O9UkXRZKMlpsW8SrZQzimslx3ZF0jRanCR5EyjiG0JC1r5cSJCYySQJylJG3VSxEqD5d+yuSKTklFXjbTXLZ0ITCNKExU4uyWNOTLNJkoTIK1rmbF4lfvHskgTHqTVsWE5jG9Oc5SVsic5/wiNgnWTmSCCJ7x1GXLwtn8rHpm80PaCmOiDEBQAwBroAUFFgIWigBYFdSggrQnQCemv4celE0WLRdDGzqxjCJSoh4K6PMU5dF1IpSgCmWoQxMa0X+GlKI3FEBJ8TTTKm10pShtKYveWFJg9VSjKq0lAR5KzgnxlKUfHcBPo0mlmwqVqO7k0FFzmtSlrtOpNnwUVEEKSWFaFUtftWlQszrUghZVQvlMq1rTusO1uvWtymQjXOcK17bS9a5sfQ5e9srXvvr1r4ANrGAHS9jCGvawiE2sYhfL2MY69rGQjaxkJ0vZylr2spjNrGY3y9nOevazoA2taEdL2tKa9rSoTa1qV8va1rr2tbBdS0AAACH5BAEKAAAALIAAeAAoADAAgwAAAFBwas6ADyQVAIxKBN7e3pxTBNBYWLg/P729vXtCBIwfVgAAAAAAAAAAAAAAAAj8AAEIHEiwoMGDCBMqXMiwocOHECM+HEBxgESBFS0uzHgRAMeNFTt+VDgyYkmCJU8eVGkwZUiQFBm6jAlTI8mXGHEmZNmxp8+fQIMKHUq0qNGjSA8WWMp0KdKmTZ9CdXp0KlWJGUs2XcB1QVadCL/SFLi1q1ibO8USLMv1rEy1A9l6hetQgF0BUZUy7XgX7169VyP2zWuQsOC7htf+ldgUgePHkCMjSLywseTLjikrtIxZsuaEnDtD/oyw6YHTqFOrPtDR9OrXp1szhQ1b9lLarxkS2E2gr+LbuR/y7n33d4Hawnn7jjs7uMPhy8k2X91xeNKB1q8DyH6de8+AACH5BAEKAAAALIAAfAAoACwAgwAAAFBwas6ADyQVAIxKBN7e3rg/P9BYWJxTBL29vXtCBIwfVgAAAAAAAAAAAAAAAAj/AAEIHEiwoMGDCBMqXMiwocOHECM+HEBxgESBFS0uzHgRAMeNFTt+VDgyYkmCJU8uFMBSAMKUIR+2dHkQJkWIM1/GxLizYc6LPwUWGEp0aEeCQQEULXp0YNKlRJsKfAq1gMiMPQku2LpAJUmsNw9y7ZoVJFiEY70mBBvWYNqyU1sibVnV6sC6SfPSrUoQr1ynf+OyrNu3ql6WcwfzvWs4cMKiBiIbSEA5geTLkyszXQhZcmXLmCN/3qyws+jKoU9TJv2Y6OXPqTOvjnrQNGaCB3IfQHgZoe3eA3XvPgjc4G/JuHXzRl7bderkuZdH9u08NMPirYfGvs68dPXbC7FTONf+PHz3hraFSzegtjD5yOqJS27P+L2B+AYv0xf6HX9B/XAdRcCABOwnIIEGdkRggQFKBcCCJQUEACH5BAEKAAAALHwAiAAwABwAgwAAAFBwas6ADyQVAIxKBLg/P97e3tBYWJxTBL29vcMZGXtCBIwfVgAAAAAAAAAAAAj/AAEIHEhQ4ICDAwoqLMigIYOFECMiTBhRocOHFTMaRKiR4MWOGSeCFPhxJEQBKAUYWMmy5UqCLlmmFCAy48yYMWHinFmz4k2cLXXG5MnRZkqgQQcCJTrx4EyhBgpILZCgaoKpWLNaTZB0o9OUULFuzUqWqtWuACY+VcpSrNWyWs+yJKgWLNuVbqvCzct1bsaWcAliVUBYgeCyGgEjHji48GGyidsuFtiY8OOskfFOBlDZMOPNEBVLhVjYs8DSJsNOJe14IOrUAkUXYG3ZdWvYsmmbBvAatsYDwA/8Do61Z+rgwjMiL14UNvLhwJkf9A3guXLiU42btF6RO/WC3iGGDP8ucLxC89/RE0QfEAAh+QQBCgAAACyAAIgAMAAcAIMAAABQcGrOgA8kFQCMSgS4Pz/QWFje3t6cUwS9vb3DGRl7QgSMH1YAAAAAAAAAAAAI/wABCBwoUIBBAQcSKlyYkCBBhgoHSBzgsCKAgwghMrQIQOOBiRQ5DsTocSFHjyBFjjxYUuFJjSktklRYoGaBBDgT2NzJM6dOmwtjFmRJ06ZPnkhv5twZdCLBmQl3Hk0qdSnQiE5XGlxYFSfVrj9rNpXocSdBsyoBfLUJsqzNs2/Trq3ZViNagXdFzi1QF2LevBz39j0AeKCBw4gPE0ycGC7diVzjVmSMeDFlA475Qi5ak+NlzIYvZx5cWOBny5RHb44qGcDptJ93km79WmVstqsJ0xYN+7Ls3Hlri7z9WGLmnY3Tekb82/hAqsmVT2aO2znepNGlozbQPOR1pNm1myamXtw7AALoCWQWL1Kow/Tqn7dmT9A9Qfjr6Ve0PxC//M76OeReQAAh+QQBCgAAACx8AIgANAAcAIMAAABQcGrOgA8kFQCMSgTe3t64Pz/QWFicUwS9vb17QgSMH1YAAAAAAAAAAAAAAAAI/wABCBxIUCCBgwQGKBwgoKHDhgQLSCywsOKAghgzGkRY8eHDiBMtLtRIciDChAs9OgQpUaTCkiVPdlQpgCVFlzALutzJ0OHEAguCLtiZkyBPlw9/Ch2Ks6jAoyKTTlxK1CkAqBalSqTatORMmj5/ih3782FFjV/BCiDLVqzZkRnTgm1Lt8Dbl3FTqm1Yt+3dixn38p1ooLCBBIgTGF58OPHPs4EF/1ycWDHjwpUfw8UoeC1hw5UvY3YccnPBzpNBJxbdGLFmvJxppmZdmCBtw5Bjq5xN2/ZtA7lPy/582/ft4ATnEu898Ddw0xq1FmCdczFymNKpw7QOHXtYidpLciqHXTS76Oq4u5f8OJA3+tpWk69sv/y9gfjyIdIHb9g+/oHsCeTedv3BFBAAIfkEAQoAAAAsgAB4ACgAMACDAAAAUHBqzoAPJBUAjEoE3t7enFMEvb29e0IEZqIqht4vjB9WAAAAAAAAAAAAAAAACP8AAQgcKHCAwQEEEypMeBDhQoINH0ocGHEigIoWF2KUuDEjxIMPGwoYKaCjxoMkS4KkiJKkSYUiXa4s2HLkS4Y1VRr8aDDlTZ4DfDbMmVLoTpYGCSglYHRo0ac6HdJMurRpTKgyj04dsJRpVqdYvwLtavVgV4JnPQpMu5UtALcZ3TZ0C9eiXLNL0eZV+3Yv34F0q5L8+zCw0pSEFxr2OjKxwsWIHWPVexjq38mABT+9bDlz5c18Ma/VXLSw34QKUisIS1K1AtNKH7pmPdI1bAKyVdMWYFvxaYKzafdWmzKB8QQpCyhfrvw48sEWix9Pzny588gTpRunXr3AdejZSX5uH9m9+XTwCXeXL7Cg/QLm2NPTXu/+/fL4BNWXrw8fff75+7nXX2ML7cZddfgVaCB55SWo0IIMduegfAuuN+F/I5EF4U8DpaThghwK5CFpu4UIwIifGWgihgJktKKCBE704oP+naQVYRciJVVCAQEAOw==',
-            sleep: 'data:image/gif;base64,R0lGODlhAAEAAYMAAAAAAFBwas6ADyQVAIxLBd7e3r29vZxTBP///3tCBIwfVgAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBLQAAACwAAAAAAAEAAQAI/wADCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duxwB6N3Lt6/fv4ADCx5MuLDhw4gTK17MuLHjx5AjS55MubLly5gza97MubPnz6BDix5NurTp06hTq17NurXr17Bjy55Nu7bt27hz697Nu7fv38CDCx9OvLjx48iTK1/OvLnz59CjS59Ovbr169iza9/Ovbv37+DDi/8fT768+fPo06tfz769+/fw48ufT7++/fv48+vfz7+///8ABijggAQWaOCBCCao4IIMNujggxBGKOGEFFZo4YUYZqjhhhx26OGHIIYo4ogklmjiiSimqOKKLLbo4oswxijjjDTWaOONOOao44489ujjj0AGKeSQRBZp5JFIJqnkkkw26eSTUEYp5ZRUVmnllVhmqeWWXHbp5ZdghinmmGSWaeaZ6CGg5ppqogkYm2y6+Reca8rpF51t2vlmnXrOyWeffcUJaKB/9imoYgMkOgBjii465KGJNcqookRCipiki2EqpKWHaRoppY/iSVijApQqgKeAkWoqqjviicCoipr/eiqogqlaKqs6ugprorLi2petsyYKpK6DAesrX8bS2iSwsvaqbKMEREuAs8I+yWyztz6rqLTTrqosk9di6ym00lLrqJPhNjvutuV6Wy267EYrK7eN1mvvAPR+uyS58pqa7733/nvusvF2W6rAAPNLwLFHKjyvtAkHDLG+SiosMLcP95utvVBaPHGiGPvb7sb1dlzwxSMLEDLJDBvpcbQOi6xxsCVbG/EA2GK7sroUJ3kzzjlnbDDP7xIccdBCB91ykT8jLfPQ5poMcspOV53z0kDGbPXWRA+MpNZch431j2CHvfXYHv6s9r1WAyxrAXDHDffPLK5td6xVu22q3HLT/73i3Xe3zfbefM99c92Ary24vW8XXoDfIup9MNVPK4232aU6XoACnCsgd9QjSq4y5ZPPbC7mhBfeuedxgx754KVDXfnVl2Ou+eqfu+v1h6LvnDTtvKIuwO2d504yiOn+rjPpo5suvOauh5j87Ms7H7vwzUKvO4nTX5+z79RjP7zj0SNfe9Dge1+97Khrfzzv51ed/tbzK392zxx232z98jNv/+K7S1v8nMY/AvovfADk3gCRVkAGHlB99yta/hZotQai74H745YGYYa/DenvgtajHwaFtkEOShB+wUOdBb83wqeVcGEd1NAHWRjCCrYwdi9EW4TANkPxic8AQDSA3P+CaAAdQoiHFPShEktFxCEG0YgPQmIKl0hFWTUxbkSEooOkCLQqelEAV4RbFmPYH4DtqovNgyHjvsjGzLVuewcyY7Fqh7AkthF7xqMZguRYKzp+rF53ZGMetVgfPgYGWHWcYiCXOEgy4kdhvuIisgq2SCWO8YQCgmTPJLmXslUSc5cMYIA0iUkAcFIvnvxk2EK5x4JFkpJwRCUsVYk6VsbxZH9EZMrWpUjgDYCIwAymMIGoSxMmjEEvUyMgw8dLNFouUcOMpjCLqUxDtnJqG+zdLrXVS3EpSprgfKIfjWnNW2JTg9qcWTMBGM5wUhNyCWrUAeZJz3nOT2BnDFo9Aab/Oc2la5+KAmgpASTPetLznn/MZ84EWq9+Ou6f9CzoPAlJH4kaFKHGVCi2GNoohxYOohMNaEQduR+L1hOjytRosziqKI/yDaQHsChF7wO2nenQojlUVAJ2moDEJeqkJZQpSf1T020O9C84DapOeerTAQA1myIN6VEzOcs0lm+OPz2oUhPF05769KnojGpMh1rGqtqUrEmFKleZ+lWtqtWpI51qge4Gmabe1K5yJRBdH4PXvHayr0e0W10B2ynCblGwfDVsYfoqSubg5bGQjaxkJ0vZylr2spjNrGY3y9nOevazoA2taEdL2tKa9rSoTa1qV8va1rr2tbCNrWxnS9vaGNr2trjNrW53y9ve+va3wA2ucIdL3LUEBAAh+QQBLQAAACwwAHgAQABoAIMAAABQcGrOgA8kFQCMSwX////e3t69vb2cUwR7QgSMH1YAAAAAAAAAAAAAAAAAAAAI+QABCBxIsKDBgwgTHizAsKFDhgojSpxo8KHFAhQzalx40eHGjxs7egRJkuTIkigznkzJUuHKljALvozJciZNmDZv1myoU2fOniF5Ao35c+jHokY1Ik1KUaRQpk2dYoQa1SnVqiKvat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67du3jz6t3Lt6/fv4ADCx5MuLDhw4gTK17MuLHjx5AjS57seIDlAW4vY26rOfNls5oJiCZAsHPY0KNLfz59eTTpgabBohat2rLY2a5fk8XtGnTr3LTL8k6dVjOC4wjUGkeu/DLy5MWdM+e8mm3stdeb2y4bEAAh+QQBLQAAACxUAGgACAAQAIMAAABQcGrOgA8kFQCMSwX////e3t69vb2cUwR7QgSMH1YAAAAAAAAAAAAAAAAAAAAIIgALCBxIsKDBgwQBKASQcGFDhQ8ZHlwoUSDFiBgRatxIMCAAIfkEAS0AAAAsVABoACwANACDAAAAUHBqzoAPJBUAjEsF3t7evb29nFMEe0IEjB9WAAAAAAAAAAAAAAAAAAAAAAAACE8AAQgcSLCgwYMIEypcyLChw4cQI0qcSLGixYsYM2rcyLGjx48gQ4ocSbKkyZMoU6pcybKly5cwY8qcSbOmzZs4c+rcybOnz59AgwodqjAgADs=',
-            walk: 'data:image/gif;base64,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',
-            play: 'data:image/gif;base64,R0lGODlhAAEAAYMAAAAAAFBwas6ADyQVAIxLBd7e3r29vZxTBGaiKobeL3tCBIwfVgAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBGQAAACwAAAAAAAEAAQAI/wADCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duxwB6N3Lt6/fv4ADCx5MuLDhw4gTK17MuLHjx5AjS55MubLly5gza97MubPnz6BDix5NurTp06hTq17NurXr17Bjy55Nu7bt27hz697Nu7fv38CDCx9OvLjx48iTK1/OvLnz59CjS59Ovbr169iza9/Ovbv37+DDi/8fT768+fPo06tfz769+/fw48ufT7++/fv48+vfz7+///8ABijggAQWaOCBCCao4IIMNujggxBGKOGEFFZo4YUYZqjhhhx26OGHIIYo4ogklmjiiSimqOKKLLbo4oswxijjjDTWaOONOOao44489ujjj0AGKeSQRBZp5JFIJqnkkkw26eSTUEYp5ZRUVmnllVhmqeWWXHbp5ZdghinmmGSWaeaZaKap5ppstunmm2QOIOcAjM1J55Z21jknl3ku1qeWfyYWKJV2CmCoAIP+VeihiTq5qKGN9vUoontOOWmkfF1aqZSayklYp3c6OuehpJYaqJ0EpEoAqZgeOWmpjG7/CgCqqrIqK5Ovwkqpp3vRmqqtvIoqp66myurrqrEG2+SxpKpKgJ3QRjuAs60ayeyh1EqrbbbK4jqns82qqu224t665LWGcjvusdUWeay64GJba7LQQvluuXLGm+68kEpr77fO4jstvwLou2u9T96bKroFE6ztv+sSG+6vurZL5LrDSrwvxbBaPCTGA2i8MbIdm6skyCI3zHGx3Z4L8MqkJiBzAinPTDO93uZLcMwz19wzzi7rDPOhNvssM7ChJskwz0eLXDTQKoIstbQpk4rA1QiQWsDWXG+NddZQpzj12KNWbejXWnfNNdpho0g22WafjXXaahfAdr8tm/j22HEL/3C3AHV7PXfbH2o7McmlGox033SrvcDjC3SNNImGyzv0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',
-            stand: 'data:image/gif;base64,R0lGODlhAAEAAYMAAAAAAFBwas6ADyQVAIxKA97e3pxTBL29vXtCBGaiKobeL4wfVgAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBHgAAACwAAAAAAAEAAQAI/wADCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duxwB6N3Lt6/fv4ADCx5MuLDhw4gTK17MuLHjx5AjS55MubLly5gza97MubPnz6BDix5NurTp06hTq17NurXr17Bjy55Nu7bt27hz697Nu7fv38CDCx9OvLjx48iTK1/OvLnz59CjS59Ovbr169iza9/Ovbv37+DDi/8fT768+fPo06tfz769+/fw48ufT7++/fv48+vfz7+///8ABijggAQWaOCBCCao4IIMNujggxBGKOGEFFZo4YUYZqjhhhx26OGHIIYo4ogklmjiiSimqOKKLLbo4oswxijjjDTWaOONIA6g44464ggbjzz6+BqQOwrpGpE9GokajwQ06WSTQSo5GpNPOhmllKFRWSUBV2L5mZZVdullZ2A+KeaYm5VpZZFoeqYmlGy2ydmbXMYpp2ZgGqCnAWfeaVmee/bpJ2WA6inooJIVyqediFbG454GmMloo5M9uqekSVLq6I6QYjqApn9yeumamYKa6I5PCqCqAIeauhiYq7L/OqmrjcG6aqu0ImarqrjmahiPscbaK23D/lWsfcAGy+usuR3bl7P0JasstEMySxi18kkbLLatccstfNp6ypu2vZJr7X3hkvrpbuaWCli76/qXLpzu3gbvtTsKey6y+a4qLrv9LluvX/f+t+u2+6amrbICxwvAwd+ud7C+A3cbMMMN8wVxwtGi6iTGEbt5Mch2blwxfhPfyvFpCzPcpckOA9hyxrMd7CmSQP4r4MyynryazeriDGbI7fFM9JweNxnrzULrqHOARq9sGtD0Np10nT7rNy8BFMf889WepurvxyoTSeDWXf8Itrpiq9p2z0CeffHbR19GJ9Vclx33gGjr/62201tiPcDbdCOJIM9pf900xkuTPa3U+SHut+JCMz62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'
+            idle: TRANSPARENT_GIF,
+            sleep: TRANSPARENT_GIF,
+            walk: TRANSPARENT_GIF,
+            play: TRANSPARENT_GIF,
+            eat: TRANSPARENT_GIF,
+            meow: TRANSPARENT_GIF,
+            stand: TRANSPARENT_GIF
         };
 
-        gifUrls.meow = gifUrls.idle;
-        gifUrls.eat = gifUrls.stand;
-        gifUrls.play = 'assets/animations/play-animation.gif';
-
-        const animationKeys = Array.from(new Set([...Object.keys(gifUrls), 'meow', 'eat']));
+        const animationKeys = Array.from(new Set(Object.keys(gifUrls)));
         const animationFileCandidates = Object.fromEntries(
             animationKeys.map(key => [key, [
                 `assets/animations/${key}-animation.gif`,
@@ -1275,6 +1375,11 @@
             ball: 'toy'
         };
 
+        const DEFAULT_MEMORY_COSTS = [
+            0, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500,
+            5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000
+        ];
+
         const foodItems = [
             { id: 'bowl',           label: 'Bowl',    cost: 10,  servings: 5, item: 'assets/textures/food/bowl.png',           dish: 'assets/textures/food/bowl.png' },
             { id: 'meatball',       label: 'Meatball',cost: 20,  servings: 3, item: 'assets/textures/food/meatball.png',       dish: 'assets/textures/food/meatball_dish.png' },
@@ -1283,8 +1388,9 @@
             { id: 'salmon',         label: 'Salmon',  cost: 50,  servings: 3, item: 'assets/textures/food/salmon.png',         dish: 'assets/textures/food/salmon_dish.png' },
             { id: 'steak',          label: 'Steak',   cost: 60,  servings: 3, item: 'assets/textures/food/steak.png',          dish: 'assets/textures/food/steak_dish.png' },
         ];
-        let foodInventory = {};
         let selectedFood = null;
+        let feedingLock = false;
+        let foodSheetOpen = false;
         const platePileTexture = 'assets/textures/food/dish_pile.png';
         textures.foodPile = platePileTexture;
 
@@ -1297,53 +1403,19 @@
             return textureKey ? textures[textureKey] : null;
         }
 
-        const animationFileAvailability = {};
-
+        
         function setMollyGifSource(gifName) {
             const mollyGif = document.getElementById('mollyGif');
             if (!mollyGif) return;
 
-            const fallback = gifUrls[gifName] || gifUrls.idle;
+            const fallback = gifUrls[gifName] || gifUrls.idle || PLACEHOLDER_IMG;
             const candidates = animationFileCandidates[gifName] || [];
-            let candidateIndex = 0;
-
-            mollyGif.onerror = null;
-            mollyGif.onload = null;
-
-            const tryNextCandidate = () => {
-                while (candidateIndex < candidates.length) {
-                    const candidate = candidates[candidateIndex++];
-                    if (!candidate) continue;
-                    const availability = animationFileAvailability[candidate];
-                    if (availability === false) {
-                        continue;
-                    }
-                    if (availability === true) {
-                        mollyGif.src = candidate;
-                        return;
-                    }
-
-                    mollyGif.onload = () => {
-                        animationFileAvailability[candidate] = true;
-                        mollyGif.onload = null;
-                        mollyGif.onerror = null;
-                    };
-
-                    mollyGif.onerror = () => {
-                        animationFileAvailability[candidate] = false;
-                        tryNextCandidate();
-                    };
-
-                    mollyGif.src = candidate;
-                    return;
-                }
-
-                mollyGif.onerror = null;
-                mollyGif.onload = null;
+            mollyGif.dataset.fallback = fallback;
+            if (!candidates.length) {
                 mollyGif.src = fallback;
-            };
-
-            tryNextCandidate();
+                return;
+            }
+            loadImageWithFallback(mollyGif, candidates, fallback);
         }
 
         function loadCustomTexture(textureKey, url) {
@@ -1372,16 +1444,18 @@
             if (dropImg) {
                 const fallbackDish = foodItems[0]?.dish || textures.food;
                 const texture = selectedFood?.dish || fallbackDish || textures.food;
-                dropImg.src = texture;
-                dropImg.onerror = () => {
-                    dropImg.onerror = null;
-                    dropImg.src = textures.food;
-                };
+                const candidates = [texture, fallbackDish, textures.food].filter(Boolean);
+                loadImageWithFallback(dropImg, candidates, textures.food);
             }
         }
 
         // Game State
-        const gameState = {
+        const SAVE_KEY_PREFIX = 'mollyGame_';
+        const USER_ID_KEY = 'mollyUserId';
+        const ACTION_FEED_DURATION = 2800;
+        const MEMORY_UNLOCK_CODE = 'ayeshalovesmolly';
+
+        const createDefaultState = () => ({
             hearts: 0,
             stats: {
                 food: 80,
@@ -1392,32 +1466,34 @@
             lastFedAt: Date.now(),
             lastUpdate: Date.now(),
             unlockedMemories: [0],
-            memoryCosts: [
-                0, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500,
-                5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000
-            ],
+            memoryCosts: [...DEFAULT_MEMORY_COSTS],
             roomItems: [],
-            foodInventory: {}
-        };
+            foodInventory: {},
+            pendingActions: []
+        });
+
+        let gameState = createDefaultState();
+        Object.defineProperty(window, 'foodInventory', {
+            configurable: true,
+            get: () => gameState.foodInventory
+        });
         window.gameState = gameState;
-        window.foodInventory = foodInventory;
-        foodInventory = gameState.foodInventory;
 
         // Session-only unlock flag for the secret code
         let codeUnlockActive = false;
 
         // Memory images prefer local files from the relative memories/ folder and fall back to built-in placeholders
         const memoryFolderImages = Array.from(
-            { length: gameState.memoryCosts.length },
+            { length: DEFAULT_MEMORY_COSTS.length },
             (_, idx) => `memories/memory-${idx + 1}.jpg`
         );
         const legacyMemoryFolderImages = Array.from(
-            { length: gameState.memoryCosts.length },
+            { length: DEFAULT_MEMORY_COSTS.length },
             (_, idx) => `memories/memory${idx + 1}.jpg`
         );
         const memoryVideoFiles = Array.from(
-            { length: gameState.memoryCosts.length },
-            (_, idx) => (idx === gameState.memoryCosts.length - 1 ? `memories/memory-${idx + 1}.mp4` : null)
+            { length: DEFAULT_MEMORY_COSTS.length },
+            (_, idx) => (idx === DEFAULT_MEMORY_COSTS.length - 1 ? `memories/memory-${idx + 1}.mp4` : null)
         );
         const fallbackMemoryImages = [
             'https://github.com/user-attachments/assets/2aad0e45-32cf-4ba7-863e-cdabbf06ca33',
@@ -1427,27 +1503,238 @@
             null, null, null, null, null, null, null, null, null, null, null, null, null, null
         ];
 
-        const MEMORY_UNLOCK_CODE = 'ayeshalovesmolly';
-
         // Action configurations with GIF mappings
-        const actions = {
+        const actions = Object.freeze({
             cuddle: { icon: 'heart', text: 'Molly feels loved!', mood: 15, gif: 'idle' },
-            feed: { icon: 'food', text: 'Yum! Molly is full!', food: 20, gif: 'eat', duration: 2800 },
+            feed: { icon: 'food', text: 'Yum! Molly is full!', food: 20, gif: 'eat', duration: ACTION_FEED_DURATION },
             play: { icon: 'play', text: 'Molly had so much fun!', mood: 20, rest: -10, gif: 'play' },
             sleep: { icon: 'sleep', text: 'Sweet dreams, Molly!', rest: 25, gif: 'sleep' },
             walk: { icon: 'walk', text: 'Molly enjoyed the fresh air!', mood: 10, life: 10, gif: 'walk' },
             bathe: { icon: 'bathe', text: 'Molly is sparkling clean!', life: 15, gif: 'stand' }
-        };
+        });
         window.actions = actions;
         window.foodItems = foodItems;
 
         // Shop items
-        const shopItems = {
+        const shopItems = Object.freeze({
             feast: { name: 'Premium Feast', stat: 'food', value: 100 },
             mouse: { name: 'Catnip Mouse', stat: 'mood', value: 100 },
             pillow: { name: 'Cloud Pillow', stat: 'rest', value: 100 }
-        };
+        });
         window.shopItems = shopItems;
+
+        let animationController;
+        const scheduleSave = debounce(() => saveGameImmediate(), SAVE_DEBOUNCE_MS);
+
+        /**
+         * @param {Partial<typeof gameState> | ((draft: typeof gameState) => Partial<typeof gameState>)} patch
+         * @returns {typeof gameState}
+         */
+        function updateState(patch) {
+            const next = typeof patch === 'function' ? patch(safeClone(gameState)) : patch;
+            if (!next || typeof next !== 'object') return gameState;
+
+            if (next.stats) {
+                gameState.stats = { ...gameState.stats, ...next.stats };
+            }
+            if (next.pendingActions) {
+                gameState.pendingActions = [...next.pendingActions];
+            }
+
+            Object.entries(next).forEach(([key, value]) => {
+                if (key === 'stats' || key === 'pendingActions') return;
+                gameState[key] = value;
+            });
+            scheduleSave();
+            return gameState;
+        }
+
+        const trackedListeners = [];
+        function addTrackedListener(target, event, handler, options) {
+            if (!target || !target.addEventListener) return;
+            target.addEventListener(event, handler, options);
+            trackedListeners.push(() => target.removeEventListener(event, handler, options));
+        }
+
+        function addPressListener(target, handler) {
+            if (!target) return;
+            let lastTouch = 0;
+            const wrapped = (event) => {
+                if (event.type === 'touchstart') {
+                    lastTouch = Date.now();
+                    event.preventDefault();
+                } else if (event.type === 'click' && Date.now() - lastTouch < 250) {
+                    return;
+                }
+                handler(event);
+            };
+            addTrackedListener(target, 'click', wrapped);
+            addTrackedListener(target, 'touchstart', wrapped);
+        }
+
+        function getPointerPosition(event) {
+            if (event && 'touches' in event && event.touches.length) {
+                return { x: event.touches[0].clientX, y: event.touches[0].clientY };
+            }
+            if (event && 'changedTouches' in event && event.changedTouches.length) {
+                return { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY };
+            }
+            return { x: event?.clientX ?? window.innerWidth / 2, y: event?.clientY ?? window.innerHeight / 2 };
+        }
+
+        class AnimationController {
+            constructor() {
+                this.timeouts = new Set();
+                this.intervals = new Set();
+                this.singleTimeout = null;
+                this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
+                document.addEventListener('visibilitychange', this.handleVisibilityChange);
+                trackedListeners.push(() => document.removeEventListener('visibilitychange', this.handleVisibilityChange));
+            }
+
+            setTimeout(fn, delay, { single = false } = {}) {
+                if (single && this.singleTimeout) {
+                    clearTimeout(this.singleTimeout);
+                    this.timeouts.delete(this.singleTimeout);
+                }
+                const id = setTimeout(() => {
+                    this.timeouts.delete(id);
+                    if (single) this.singleTimeout = null;
+                    fn();
+                }, delay);
+                this.timeouts.add(id);
+                if (single) this.singleTimeout = id;
+                return id;
+            }
+
+            clearTimeout(id) {
+                clearTimeout(id);
+                this.timeouts.delete(id);
+                if (this.singleTimeout === id) this.singleTimeout = null;
+            }
+
+            setInterval(fn, delay) {
+                const id = setInterval(fn, delay);
+                this.intervals.add(id);
+                return id;
+            }
+
+            clearAll() {
+                this.timeouts.forEach(clearTimeout);
+                this.intervals.forEach(clearInterval);
+                this.timeouts.clear();
+                this.intervals.clear();
+                this.singleTimeout = null;
+            }
+
+            handleVisibilityChange() {
+                if (document.hidden) {
+                    this.clearAll();
+                    processPendingActions(true);
+                } else {
+                    startBoredomLoop();
+                    startDecayLoop();
+                }
+            }
+
+            teardown() {
+                this.clearAll();
+            }
+
+            playPop(element, className = 'molly-pop') {
+                if (!element) return;
+                element.classList.remove(className);
+                requestAnimationFrame(() => element.classList.add(className));
+            }
+        }
+
+        animationController = new AnimationController();
+
+        /**
+         * Apply haptic feedback when supported.
+         * @param {number} duration
+         */
+        function vibrate(duration = HAPTIC_SHORT) {
+            if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+                navigator.vibrate(duration);
+            }
+        }
+
+        /**
+         * Attempt to load an image with multiple candidates and a timeout.
+         * @param {HTMLImageElement} img
+         * @param {string[]} candidates
+         * @param {string} fallback
+         */
+        function loadImageWithFallback(img, candidates, fallback) {
+            if (!img) return;
+            let idx = 0;
+            let timedOut = false;
+            let timerId;
+
+            const fail = () => {
+                clearTimeout(timerId);
+                img.onerror = null;
+                img.onload = null;
+                img.src = fallback || PLACEHOLDER_TEXTURE;
+            };
+
+            const tryNext = () => {
+                if (timedOut) return fail();
+                if (idx >= candidates.length) {
+                    fail();
+                    return;
+                }
+                const next = candidates[idx++];
+                img.onerror = tryNext;
+                img.onload = () => {
+                    clearTimeout(timerId);
+                    img.onerror = null;
+                    img.onload = null;
+                };
+                img.src = next;
+            };
+
+            timerId = setTimeout(() => {
+                timedOut = true;
+                fail();
+            }, ASSET_TIMEOUT_MS);
+
+            tryNext();
+        }
+
+        /**
+         * Validate a list of img elements and swap broken ones with placeholders.
+         */
+        function validateImages(imgs) {
+            Array.from(imgs).forEach(img => {
+                const applyPlaceholder = () => {
+                    img.onerror = null;
+                    img.src = img.dataset.fallback || PLACEHOLDER_TEXTURE;
+                    img.classList.add('asset-placeholder');
+                };
+                if (!img.dataset.fallback) {
+                    img.dataset.fallback = PLACEHOLDER_TEXTURE;
+                }
+                img.addEventListener('error', applyPlaceholder, { once: true });
+                setTimeout(() => {
+                    if (!img.complete || img.naturalWidth === 0) {
+                        applyPlaceholder();
+                    }
+                }, ASSET_TIMEOUT_MS);
+                if (img.complete && img.naturalWidth === 0) {
+                    applyPlaceholder();
+                }
+            });
+        }
+
+        /**
+         * Validate all existing images in the document and swap broken ones with placeholders.
+         */
+        function validateAssets() {
+            validateImages(document.querySelectorAll('img'));
+        }
+
 
         // SVG paths for icons
         const iconPaths = {
@@ -1459,13 +1746,10 @@
             bathe: 'M12 22C16.97 22 21 17.97 21 13C21 11.5 20.64 10.07 20 8.79L18.5 5.5L16.5 8.5L14.5 5.5L12.5 8.5L10.5 5.5L8.5 8.5L6.5 5.5L5 8.79C4.36 10.07 4 11.5 4 13C4 17.97 8.03 22 12 22M12 20C9.11 20 6.7 17.89 6.11 15H17.89C17.3 17.89 14.89 20 12 20Z'
         };
 
-        const BORED_MEOW_DELAY_MS = 25000;
-
         // Current animation state
         let currentGif = 'idle';
-        let animationTimeout = null;
-        let boredomInterval = null;
         let lastInteraction = Date.now();
+        let lastHeartTap = 0;
 
         // Initialize
         function init() {
@@ -1474,13 +1758,14 @@
             setMollyGifSource('idle');
             setFoodDropTexture();
             loadCustomTextures();
-
+            validateAssets();
             loadGame();
             applyOfflineDecay();
+            processPendingActions(true);
             renderRoomItems();
             setShopTextures();
             updateUI();
-            renderMemories();
+            renderMemories(false);
             setupEventListeners();
             startBoredomLoop();
             startDecayLoop();
@@ -1503,90 +1788,165 @@
         // Load game from localStorage
         function loadGame() {
             codeUnlockActive = false;
-            let userId = localStorage.getItem('mollyUserId');
-            if (!userId) {
-                userId = generateUserId();
-                localStorage.setItem('mollyUserId', userId);
-            }
-            const saveKey = `mollyGame_${userId}`;
-            let saved = localStorage.getItem(saveKey);
+            const userId = ensureUserId();
+            const saveKey = `${SAVE_KEY_PREFIX}${userId}`;
+            let saved = safeStorageGet(saveKey);
 
-            // Migrate legacy save if namespaced save is missing
             if (!saved) {
-                const legacySaved = localStorage.getItem('mollyGame');
+                const legacySaved = safeStorageGet('mollyGame');
                 if (legacySaved) {
                     saved = legacySaved;
-                    localStorage.setItem(saveKey, legacySaved);
+                    safeStorageSet(saveKey, legacySaved);
                 }
             }
 
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                gameState.hearts = parsed.hearts || 0;
-                gameState.stats = parsed.stats || gameState.stats;
-                gameState.lastUpdate = parsed.lastUpdate || Date.now();
-                gameState.lastFedAt = parsed.lastFedAt || parsed.lastUpdate || gameState.lastUpdate;
-                gameState.unlockedMemories = parsed.unlockedMemories || [0];
-                gameState.roomItems = parsed.roomItems || [];
-                gameState.foodInventory = parsed.foodInventory || {};
-            } else {
-                gameState.foodInventory = {};
+            if (!saved) {
+                gameState = createDefaultState();
+                window.gameState = gameState;
+                return;
             }
-            foodInventory = gameState.foodInventory;
-            window.foodInventory = foodInventory;
+
+            try {
+                const parsed = JSON.parse(saved);
+                if (!validateSaveShape(parsed)) {
+                    recoverCorruptedSave(userId);
+                    return;
+                }
+                gameState = {
+                    ...createDefaultState(),
+                    ...parsed,
+                    stats: { ...createDefaultState().stats, ...(parsed.stats || {}) },
+                    memoryCosts: parsed.memoryCosts && Array.isArray(parsed.memoryCosts) ? parsed.memoryCosts : [...DEFAULT_MEMORY_COSTS],
+                    foodInventory: parsed.foodInventory || {},
+                    pendingActions: parsed.pendingActions || []
+                };
+                window.gameState = gameState;
+            } catch (error) {
+                recoverCorruptedSave(userId);
+            }
+        }
+
+        function safeStorageGet(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (error) {
+                console.error('Storage read failed', error);
+                return null;
+            }
+        }
+
+        function safeStorageSet(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (error) {
+                handleQuotaError(error);
+                return false;
+            }
+        }
+
+        function ensureUserId() {
+            let userId = safeStorageGet(USER_ID_KEY);
+            if (!userId) {
+                userId = generateUserId();
+                safeStorageSet(USER_ID_KEY, userId);
+            }
+            return userId;
+        }
+
+        function handleQuotaError(error) {
+            if (error && error.name === 'QuotaExceededError') {
+                showToast('Storage full. Old saves cleared.');
+                try {
+                    localStorage.clear();
+                } catch (e) {
+                    console.error('Failed to clear storage after quota error', e);
+                }
+            } else {
+                console.error('Storage write failed', error);
+            }
+        }
+
+        function recoverCorruptedSave(userId) {
+            const preservedId = userId || ensureUserId();
+            gameState = createDefaultState();
+            window.gameState = gameState;
+            safeStorageSet(`${SAVE_KEY_PREFIX}${preservedId}`, JSON.stringify(gameState));
+            showToast('Save was corrupted and has been reset.');
+        }
+
+        function validateSaveShape(data) {
+            if (!data || typeof data !== 'object') return false;
+            const hasStats = data.stats && ['food', 'mood', 'rest', 'life'].every(k => typeof data.stats[k] === 'number');
+            return hasStats && typeof data.hearts === 'number';
         }
 
         // Save game to localStorage
-        function saveGame() {
-            let userId = localStorage.getItem('mollyUserId');
-            if (!userId) {
-                userId = generateUserId();
-                localStorage.setItem('mollyUserId', userId);
-            }
+        function saveGameImmediate() {
+            const userId = ensureUserId();
             gameState.lastUpdate = Date.now();
-            localStorage.setItem(`mollyGame_${userId}`, JSON.stringify(gameState));
+            safeStorageSet(`${SAVE_KEY_PREFIX}${userId}`, JSON.stringify(gameState));
+        }
+
+        function saveGame() {
+            scheduleSave();
         }
 
         // Apply offline stat decay
         function applyOfflineDecay() {
             const now = Date.now();
-            const offlineTime = now - gameState.lastUpdate;
+            const offlineTime = now - (gameState.lastUpdate || now);
             const offlineMinutes = Math.floor(offlineTime / (1000 * 60));
 
             if (offlineMinutes > 0) {
-                const decayRate = 0.5;
-                gameState.stats.food = Math.max(0, gameState.stats.food - offlineMinutes * decayRate);
-                gameState.stats.mood = Math.max(0, gameState.stats.mood - offlineMinutes * decayRate);
-                gameState.stats.rest = Math.max(0, gameState.stats.rest - offlineMinutes * decayRate);
-                gameState.stats.life = Math.max(0, gameState.stats.life - offlineMinutes * decayRate * 0.5);
+                updateState({
+                    stats: {
+                        food: Math.max(MIN_STAT, gameState.stats.food - offlineMinutes * OFFLINE_DECAY_RATE),
+                        mood: Math.max(MIN_STAT, gameState.stats.mood - offlineMinutes * OFFLINE_DECAY_RATE),
+                        rest: Math.max(MIN_STAT, gameState.stats.rest - offlineMinutes * OFFLINE_DECAY_RATE),
+                        life: Math.max(MIN_STAT, gameState.stats.life - offlineMinutes * OFFLINE_DECAY_RATE * LIFE_DECAY_SCALE)
+                    },
+                    lastUpdate: now
+                });
             }
         }
 
         // Start passive decay loop
         function startDecayLoop() {
-            setInterval(() => {
-                gameState.stats.food = Math.max(0, gameState.stats.food - 0.5);
-                gameState.stats.mood = Math.max(0, gameState.stats.mood - 0.3);
-                gameState.stats.rest = Math.max(0, gameState.stats.rest - 0.4);
-                gameState.stats.life = Math.max(0, gameState.stats.life - 0.2);
+            if (!animationController) return;
+            animationController.setInterval(() => {
+                updateState({
+                    stats: {
+                        food: Math.max(MIN_STAT, gameState.stats.food - DECAY_RATES.food),
+                        mood: Math.max(MIN_STAT, gameState.stats.mood - DECAY_RATES.mood),
+                        rest: Math.max(MIN_STAT, gameState.stats.rest - DECAY_RATES.rest),
+                        life: Math.max(MIN_STAT, gameState.stats.life - DECAY_RATES.life)
+                    }
+                });
                 updateUI();
-                saveGame();
-            }, 5000);
+            }, DECAY_INTERVAL_MS);
         }
 
         // Update UI
         function updateUI() {
-            document.getElementById('heartCount').textContent = Math.floor(gameState.hearts);
-            document.getElementById('foodBar').style.width = gameState.stats.food + '%';
-            document.getElementById('moodBar').style.width = gameState.stats.mood + '%';
-            document.getElementById('restBar').style.width = gameState.stats.rest + '%';
-            document.getElementById('lifeBar').style.width = gameState.stats.life + '%';
+            const heartEl = document.getElementById('heartCount');
+            const foodBar = document.getElementById('foodBar');
+            const moodBar = document.getElementById('moodBar');
+            const restBar = document.getElementById('restBar');
+            const lifeBar = document.getElementById('lifeBar');
+
+            if (heartEl) heartEl.textContent = Math.floor(gameState.hearts);
+            if (foodBar) foodBar.style.width = `${gameState.stats.food}%`;
+            if (moodBar) moodBar.style.width = `${gameState.stats.mood}%`;
+            if (restBar) restBar.style.width = `${gameState.stats.rest}%`;
+            if (lifeBar) lifeBar.style.width = `${gameState.stats.life}%`;
 
             document.querySelectorAll('.shop-btn').forEach(btn => {
-                const cost = parseInt(btn.dataset.cost);
-                btn.disabled = gameState.hearts < cost;
+                const cost = parseInt(btn.dataset.cost, 10);
+                btn.disabled = Number.isFinite(cost) ? gameState.hearts < cost : false;
             });
 
+            toggleFeedButtonDisabled(feedingLock);
             renderPlatePiles();
         }
 
@@ -1596,28 +1956,19 @@
             const mollyCircle = document.getElementById('mollyCircle');
             setMollyGifSource(gifName);
             currentGif = gifName;
-            if (mollyGif && mollyCircle) {
-                mollyGif.classList.remove('molly-pop');
-                mollyCircle.classList.remove('molly-pop');
-                void mollyGif.offsetWidth;
-                mollyGif.classList.add('molly-pop');
-                mollyCircle.classList.add('molly-pop');
+            if (animationController) {
+                animationController.playPop(mollyGif);
+                animationController.playPop(mollyCircle);
             }
 
-            // Clear existing timeout
-            if (animationTimeout) {
-                clearTimeout(animationTimeout);
-            }
-
-            // Return to idle after duration
-            if (gifName !== 'idle') {
-                animationTimeout = setTimeout(() => {
+            if (gifName !== 'idle' && animationController) {
+                animationController.setTimeout(() => {
                     setMollyGifSource('idle');
                     currentGif = 'idle';
                     document.querySelectorAll('.care-btn').forEach(btn => {
                         btn.classList.remove('active-action');
                     });
-                }, duration);
+                }, duration, { single: true });
             }
         }
 
@@ -1626,57 +1977,75 @@
         }
 
         function startBoredomLoop() {
-            if (boredomInterval) {
-                clearInterval(boredomInterval);
+            if (animationController) {
+                animationController.setInterval(() => {
+                    if (currentGif !== 'idle') return;
+                    if (Date.now() - lastInteraction >= BORED_MEOW_DELAY_MS) {
+                        setMollyAnimation('meow', 1800);
+                        markInteraction();
+                    }
+                }, 5000);
             }
-            boredomInterval = setInterval(() => {
-                if (currentGif !== 'idle') return;
-                if (Date.now() - lastInteraction >= BORED_MEOW_DELAY_MS) {
-                    setMollyAnimation('meow', 1800);
-                    markInteraction();
-                }
-            }, 5000);
         }
 
         // Render memories grid
-        function renderMemories() {
+        function isMemoriesActive() {
+            return document.getElementById('memoriesSection')?.classList.contains('active');
+        }
+
+        function renderMemories(shouldLoadImages = isMemoriesActive() || window.__TEST__) {
             const grid = document.getElementById('memoriesGrid');
+            if (!grid) return;
             grid.innerHTML = '';
 
-            for (let i = 0; i < gameState.memoryCosts.length; i++) {
+            const costs = gameState.memoryCosts || DEFAULT_MEMORY_COSTS;
+
+            for (let i = 0; i < costs.length; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'memory-slot';
+                slot.tabIndex = 0;
+                slot.dataset.index = String(i);
+                slot.setAttribute('aria-label', `Memory slot ${i + 1}`);
 
                 const unlocked = codeUnlockActive || gameState.unlockedMemories.includes(i);
                 if (unlocked) {
                     slot.classList.add('unlocked');
+                    if (!shouldLoadImages) {
+                        slot.innerHTML = '<span class="memory-placeholder">Open memories to load</span>';
+                        grid.appendChild(slot);
+                        continue;
+                    }
+                    const spinnerWrapper = document.createElement('div');
+                    spinnerWrapper.innerHTML = MEMORY_SPINNER;
+                    const spinner = spinnerWrapper.firstChild;
+                    if (spinner) slot.appendChild(spinner);
+
                     const fallbackSrc = fallbackMemoryImages[i];
                     const videoSrc = memoryVideoFiles[i];
                     const img = document.createElement('img');
                     img.className = 'memory-image';
                     img.alt = `Memory ${i + 1}`;
                     img.loading = 'lazy';
+                    img.dataset.fallback = fallbackSrc || PLACEHOLDER_TEXTURE;
 
                     const srcCandidates = [memoryFolderImages[i], legacyMemoryFolderImages[i]].filter(Boolean);
                     let candidateIndex = 0;
                     let triedFallback = false;
                     let videoTried = false;
 
-                    const mountImage = () => {
-                        if (!slot.contains(img)) {
-                            slot.innerHTML = '';
-                            slot.appendChild(img);
-                        }
+                    const setPlaceholder = () => {
+                        slot.innerHTML = `<span class="memory-placeholder">No Image Set</span>`;
                     };
-                    const setNextSource = () => {
+
+                    const tryNextSource = () => {
                         if (candidateIndex < srcCandidates.length) {
-                            mountImage();
+                            if (!slot.contains(img)) slot.appendChild(img);
                             img.src = srcCandidates[candidateIndex++];
                             return;
                         }
                         if (!triedFallback && fallbackSrc) {
                             triedFallback = true;
-                            mountImage();
+                            if (!slot.contains(img)) slot.appendChild(img);
                             img.src = fallbackSrc;
                             return;
                         }
@@ -1688,32 +2057,33 @@
                             video.loop = true;
                             video.muted = true;
                             video.playsInline = true;
+                            video.dataset.memoryIndex = String(i);
                             video.onerror = () => {
-                                if (slot.contains(video)) {
-                                    slot.removeChild(video);
-                                }
-                                setNextSource();
+                                if (slot.contains(video)) slot.removeChild(video);
+                                setPlaceholder();
                             };
+                            video.onloadeddata = () => spinner?.remove();
                             slot.innerHTML = '';
                             slot.appendChild(video);
                             video.src = videoSrc;
                             return;
                         }
-                        img.onerror = null;
-                        slot.innerHTML = `<span class="memory-placeholder">No Image Set</span>`;
+                        setPlaceholder();
                     };
 
-                    img.onerror = setNextSource;
-                    setNextSource();
+                    img.onerror = () => {
+                        tryNextSource();
+                    };
+                    img.onload = () => spinner?.remove();
+                    tryNextSource();
                 } else {
                     slot.classList.add('locked');
-                    slot.dataset.index = i;
                     slot.innerHTML = `
                         <div class="memory-lock">
                             <svg viewBox="0 0 24 24"><path d="M12 17C13.1 17 14 16.1 14 15C14 13.9 13.1 13 12 13C10.9 13 10 13.9 10 15C10 16.1 10.9 17 12 17M18 8H17V6C17 3.24 14.76 1 12 1C9.24 1 7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8M12 6C12 4.9 12.9 4 14 4C15.1 4 16 4.9 16 6V8H12V6Z"/></svg>
                             <div class="memory-cost">
                                 <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                                <span>${gameState.memoryCosts[i]}</span>
+                                <span>${costs[i]}</span>
                             </div>
                         </div>
                     `;
@@ -1721,6 +2091,50 @@
                 }
 
                 grid.appendChild(slot);
+            }
+        }
+
+        function cleanupMemoriesMedia() {
+            document.querySelectorAll('#memoriesGrid video').forEach(video => {
+                video.pause();
+                video.removeAttribute('src');
+            });
+        }
+
+        function handleMemoryGridKeydown(event) {
+            const slot = event.target.closest('.memory-slot');
+            if (!slot) return;
+            const index = Number(slot.dataset.index);
+            const total = (gameState.memoryCosts || DEFAULT_MEMORY_COSTS).length;
+            let nextIndex = null;
+            switch (event.key) {
+                case 'ArrowRight': nextIndex = Math.min(total - 1, index + 1); break;
+                case 'ArrowLeft': nextIndex = Math.max(0, index - 1); break;
+                case 'ArrowDown': nextIndex = Math.min(total - 1, index + 2); break;
+                case 'ArrowUp': nextIndex = Math.max(0, index - 2); break;
+                case 'Enter':
+                case ' ': {
+                    event.preventDefault();
+                    if (slot.classList.contains('locked')) {
+                        unlockMemory(index);
+                    }
+                    return;
+                }
+                default:
+                    return;
+            }
+            if (nextIndex !== null) {
+                const target = document.querySelector(`#memoriesGrid .memory-slot:nth-child(${nextIndex + 1})`);
+                if (target) {
+                    target.focus();
+                    event.preventDefault();
+                }
+            }
+        }
+
+        function handlePopState() {
+            if (foodSheetOpen) {
+                closeFoodSheet(true);
             }
         }
 
@@ -1735,6 +2149,7 @@
                 sprite.src = getRoomItemTexture(item.item) || textures.toy;
                 sprite.alt = item.item;
                 sprite.className = 'room-item';
+                sprite.onerror = () => { sprite.src = PLACEHOLDER_TEXTURE; };
                 sprite.style.left = `${item.x || 50}%`;
                 sprite.style.top = `${item.y || 70}%`;
                 const isFloorToy = item.item === 'ball' || item.item === 'mouse';
@@ -1781,7 +2196,8 @@
         function addRoomItem(itemName) {
             const x = 20 + Math.random() * 60;
             const y = 55 + Math.random() * 30;
-            gameState.roomItems.push({ item: itemName, x: Math.round(x), y: Math.round(y) });
+            const nextItems = [...(gameState.roomItems || []), { item: itemName, x: Math.round(x), y: Math.round(y) }];
+            updateState({ roomItems: nextItems });
             renderRoomItems();
         }
 
@@ -1791,7 +2207,9 @@
                 const icon = card.querySelector('.shop-item-icon');
                 const texture = key ? getRoomItemTexture(key) : null;
                 if (texture && icon) {
-                    icon.innerHTML = `<img src=\"${texture}\" alt=\"${key} texture\" class=\"shop-item-texture\">`;
+                    icon.innerHTML = `<img src="${texture}" alt="${key} texture" class="shop-item-texture" data-fallback="${PLACEHOLDER_TEXTURE}" loading="lazy">`;
+                } else if (icon) {
+                    icon.innerHTML = `<span aria-hidden="true">🛍️</span>`;
                 }
             });
         }
@@ -1801,8 +2219,6 @@
             if (!drop) return;
             setFoodDropTexture();
             drop.classList.remove('visible');
-            // restart animation
-            void drop.offsetWidth;
             drop.classList.add('visible');
         }
 
@@ -1813,17 +2229,17 @@
         }
 
         function getFoodStock(foodId) {
-            return foodInventory[foodId] || 0;
+            return gameState.foodInventory?.[foodId] || 0;
         }
 
         function setFoodStock(foodId, count) {
+            const nextInventory = { ...gameState.foodInventory };
             if (count > 0) {
-                foodInventory[foodId] = count;
+                nextInventory[foodId] = count;
             } else {
-                delete foodInventory[foodId];
+                delete nextInventory[foodId];
             }
-            gameState.foodInventory = foodInventory;
-            window.foodInventory = foodInventory;
+            updateState({ foodInventory: nextInventory });
         }
 
         function renderFoodSheet() {
@@ -1848,7 +2264,7 @@
                 card.type = 'button';
                 card.className = 'food-card';
                 card.innerHTML = `
-                    <img src="${food.item}" alt="${food.label}">
+                    <img src="${food.item}" alt="${food.label}" data-fallback="${PLACEHOLDER_TEXTURE}" loading="lazy">
                     <div class="food-card-info">
                         <div class="food-label">${food.label}</div>
                     </div>
@@ -1866,7 +2282,7 @@
                 const card = document.createElement('div');
                 card.className = 'food-card market';
                 card.innerHTML = `
-                    <img src="${food.item}" alt="${food.label}">
+                    <img src="${food.item}" alt="${food.label}" data-fallback="${PLACEHOLDER_TEXTURE}" loading="lazy">
                     <div class="food-card-info">
                         <div class="food-label">${food.label}</div>
                         <div class="food-cost">
@@ -1887,6 +2303,45 @@
                 });
                 marketList.appendChild(card);
             });
+
+            validateImages([
+                ...ownedList.querySelectorAll('img'),
+                ...marketList.querySelectorAll('img')
+            ]);
+        }
+
+        function createActionId() {
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+                return crypto.randomUUID();
+            }
+            return `action-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+        }
+
+        function queuePendingAction(action) {
+            const nextQueue = [...(gameState.pendingActions || []), action];
+            updateState({ pendingActions: nextQueue });
+            return action.id;
+        }
+
+        function completePendingAction(actionId) {
+            const queue = [...(gameState.pendingActions || [])];
+            const idx = queue.findIndex(a => a.id === actionId);
+            if (idx === -1) return;
+            const action = queue.splice(idx, 1)[0];
+            if (action.type === 'feed') {
+                applyActionEffects(actions.feed);
+                updateState({ pendingActions: queue, lastFedAt: Date.now() });
+                renderPlatePiles();
+                updateUI();
+            } else {
+                updateState({ pendingActions: queue });
+            }
+        }
+
+        function processPendingActions(force = false) {
+            if (!force) return;
+            const pending = [...(gameState.pendingActions || [])];
+            pending.forEach(item => completePendingAction(item.id));
         }
 
         function openFoodSheet() {
@@ -1894,14 +2349,30 @@
             const overlay = document.getElementById('foodSheetOverlay');
             if (overlay) {
                 overlay.classList.add('active');
+                if (!foodSheetOpen) {
+                    try {
+                        history.pushState({ foodSheet: true }, '');
+                    } catch (err) {
+                        console.warn('History push failed', err);
+                    }
+                    foodSheetOpen = true;
+                }
             }
         }
 
-        function closeFoodSheet() {
+        function closeFoodSheet(fromPopstate = false) {
             const overlay = document.getElementById('foodSheetOverlay');
             if (overlay) {
                 overlay.classList.remove('active');
             }
+            if (foodSheetOpen && !fromPopstate) {
+                try {
+                    history.back();
+                } catch (err) {
+                    console.warn('History back failed', err);
+                }
+            }
+            foodSheetOpen = false;
         }
 
         function purchaseFood(food) {
@@ -1910,34 +2381,36 @@
                 showToast('Not enough hearts!');
                 return;
             }
-            gameState.hearts -= food.cost;
+            updateState({ hearts: gameState.hearts - food.cost });
             setFoodStock(food.id, getFoodStock(food.id) + food.servings);
-            saveGame();
             updateUI();
             renderFoodSheet();
+            vibrate();
         }
 
         function selectFoodToFeed(food) {
-            if (getFoodStock(food.id) <= 0) return;
+            if (!food || feedingLock || getFoodStock(food.id) <= 0) return;
             setFoodStock(food.id, getFoodStock(food.id) - 1);
             selectedFood = food;
-            // Apply gameplay effects synchronously so progress isn't lost on page close
-            const action = actions.feed;
-            applyActionEffects(action);
-            gameState.lastFedAt = Date.now();
-            saveGame();
-            updateUI();
+            feedingLock = true;
+            toggleFeedButtonDisabled(true);
+            const pendingId = queuePendingAction({ id: createActionId(), type: 'feed', foodId: food.id, dish: food.dish });
+            markInteraction();
+            vibrate();
             closeFoodSheet();
-            startFeedingSequence(food);
+            startFeedingSequence(food, pendingId);
         }
 
-        let feedingTimeoutIds = [];
+        function toggleFeedButtonDisabled(disabled) {
+            const feedBtn = document.querySelector('.care-btn.feed');
+            if (feedBtn) {
+                feedBtn.disabled = disabled;
+                feedBtn.classList.toggle('disabled', disabled);
+            }
+        }
 
-        function startFeedingSequence(food) {
-            if (!food) return;
-            // Cancel any in-progress feeding sequence
-            feedingTimeoutIds.forEach(id => clearTimeout(id));
-            feedingTimeoutIds = [];
+        function startFeedingSequence(food, pendingId) {
+            if (!food || !animationController) return;
 
             const action = actions.feed;
             const duration = action.duration || 3000;
@@ -1946,29 +2419,24 @@
             setFoodDropTexture();
             showFoodDrop();
 
-            const t1 = setTimeout(() => {
+            animationController.setTimeout(() => {
                 setMollyAnimation(action.gif, duration);
                 showFloatingActionLabel(action.text);
 
-                const t2 = setTimeout(() => {
-                    const dropImg = document.getElementById('foodDropImg');
-                    if (dropImg) {
-                        dropImg.onerror = () => {
-                            dropImg.onerror = null;
-                            dropImg.src = textures.food;
-                        };
-                        dropImg.src = 'assets/textures/food/bowl.png';
-                    }
-                    const t3 = setTimeout(() => {
-                        hideFoodDrop();
-                        selectedFood = null;
-                        feedingTimeoutIds = [];
-                    }, 1000);
-                    feedingTimeoutIds.push(t3);
-                }, duration);
-                feedingTimeoutIds.push(t2);
-            }, 600);
-            feedingTimeoutIds.push(t1);
+                const dropImg = document.getElementById('foodDropImg');
+                if (dropImg) {
+                    const dishCandidates = [food.dish, textures.foodPile, textures.food].filter(Boolean);
+                    loadImageWithFallback(dropImg, dishCandidates, textures.food);
+                }
+
+                animationController.setTimeout(() => {
+                    hideFoodDrop();
+                    selectedFood = null;
+                    feedingLock = false;
+                    toggleFeedButtonDisabled(false);
+                    completePendingAction(pendingId);
+                }, duration + 400);
+            }, 250, { single: true });
         }
 
         // Unlock memory
@@ -2008,62 +2476,55 @@
 
         function unlockMemory(index) {
             const cost = gameState.memoryCosts[index];
-            if (gameState.hearts >= cost) {
-                gameState.hearts -= cost;
-                gameState.unlockedMemories.push(index);
-                saveGame();
-                updateUI();
-                renderMemories();
-                showToast(`Memory slot ${index + 1} unlocked!`);
-            } else {
+            if (!Number.isFinite(cost)) return;
+            if (gameState.hearts < cost) {
                 showToast(`Need ${cost} hearts to unlock!`);
+                return;
             }
+            const unlocked = new Set(gameState.unlockedMemories || []);
+            unlocked.add(index);
+            updateState({ hearts: gameState.hearts - cost, unlockedMemories: Array.from(unlocked) });
+            updateUI();
+            renderMemories(true);
+            showToast(`Memory slot ${index + 1} unlocked!`);
+            vibrate();
         }
 
         // Setup event listeners
         function setupEventListeners() {
-            // Navigation
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const section = item.dataset.section;
-                    switchSection(section);
-
-                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                    item.classList.add('active');
-                });
+            const nav = document.querySelector('.bottom-nav');
+            addPressListener(nav, (event) => {
+                const item = event.target.closest('.nav-item');
+                if (!item) return;
+                const section = item.dataset.section;
+                const previous = document.querySelector('.nav-item.active')?.dataset.section;
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n === item));
+                if (previous === 'memories' && section !== 'memories') {
+                    cleanupMemoriesMedia();
+                }
+                switchSection(section);
             });
 
             const memoryCodeForm = document.getElementById('memoryCodeForm');
             if (memoryCodeForm) {
-                memoryCodeForm.addEventListener('submit', handleMemoryCodeSubmit);
+                addTrackedListener(memoryCodeForm, 'submit', handleMemoryCodeSubmit);
             }
 
-            // Tap Molly
-            document.getElementById('mollyCircle').addEventListener('click', (e) => {
-                markInteraction();
-                gameState.hearts += 1;
-                createFloatingHeart(e);
-                createParticles(e);
-                updateUI();
-                saveGame();
-            });
+            const mollyCircle = document.getElementById('mollyCircle');
+            addPressListener(mollyCircle, handleMollyTap);
 
-            // Care actions
-            document.querySelectorAll('.care-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const action = btn.dataset.action;
-
-                    // Highlight active button
-                    document.querySelectorAll('.care-btn').forEach(b => b.classList.remove('active-action'));
-                    btn.classList.add('active-action');
-
-                    performAction(action);
-                });
+            const careGrid = document.querySelector('.care-grid');
+            addPressListener(careGrid, (event) => {
+                const btn = event.target.closest('.care-btn');
+                if (!btn || btn.disabled) return;
+                document.querySelectorAll('.care-btn').forEach(b => b.classList.remove('active-action'));
+                btn.classList.add('active-action');
+                performAction(btn.dataset.action);
             });
 
             const foodOverlay = document.getElementById('foodSheetOverlay');
             if (foodOverlay) {
-                foodOverlay.addEventListener('click', (event) => {
+                addPressListener(foodOverlay, (event) => {
                     if (event.target === foodOverlay) {
                         closeFoodSheet();
                         document.querySelectorAll('.care-btn').forEach(b => b.classList.remove('active-action'));
@@ -2071,14 +2532,21 @@
                 });
             }
 
-            // Shop items
-            document.querySelectorAll('.shop-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const item = btn.dataset.item;
-                    const cost = parseInt(btn.dataset.cost);
+            const shopSection = document.getElementById('shopSection');
+            addPressListener(shopSection, (event) => {
+                const btn = event.target.closest('.shop-btn');
+                if (!btn || btn.disabled) return;
+                const item = btn.dataset.item;
+                const cost = parseInt(btn.dataset.cost, 10);
+                if (item) {
                     buyItem(item, cost);
-                });
+                }
             });
+
+            const memoriesGrid = document.getElementById('memoriesGrid');
+            addTrackedListener(memoriesGrid, 'keydown', handleMemoryGridKeydown);
+
+            addTrackedListener(window, 'popstate', handlePopState);
         }
 
         // Switch section
@@ -2086,15 +2554,39 @@
             document.querySelectorAll('.home-section, .shop-section, .memories-section').forEach(s => {
                 s.classList.remove('active');
             });
-            document.getElementById(section + 'Section').classList.add('active');
+            const target = document.getElementById(section + 'Section');
+            if (target) {
+                target.classList.add('active');
+            }
+            if (section === 'memories') {
+                renderMemories(true);
+            } else {
+                cleanupMemoriesMedia();
+            }
+        }
+
+        function handleMollyTap(event) {
+            const now = Date.now();
+            if (now - lastHeartTap < HEART_TAP_DEBOUNCE_MS) return;
+            lastHeartTap = now;
+            markInteraction();
+            updateState({ hearts: gameState.hearts + 1 });
+            createFloatingHeart(event);
+            createParticles(event);
+            updateUI();
+            vibrate();
         }
 
         function applyActionEffects(action) {
             if (!action) return;
-            if (action.food) gameState.stats.food = Math.min(100, gameState.stats.food + action.food);
-            if (action.mood) gameState.stats.mood = Math.min(100, gameState.stats.mood + action.mood);
-            if (action.rest) gameState.stats.rest = Math.min(100, gameState.stats.rest + action.rest);
-            if (action.life) gameState.stats.life = Math.min(100, gameState.stats.life + action.life);
+            updateState({
+                stats: {
+                    food: clampStat(gameState.stats.food + (action.food || 0)),
+                    mood: clampStat(gameState.stats.mood + (action.mood || 0)),
+                    rest: clampStat(gameState.stats.rest + (action.rest || 0)),
+                    life: clampStat(gameState.stats.life + (action.life || 0))
+                }
+            });
         }
 
         // Perform care action
@@ -2106,31 +2598,32 @@
                 return;
             }
             markInteraction();
+            vibrate();
             const duration = action.duration || 3000;
             applyActionEffects(action);
             setMollyAnimation(action.gif, duration);
             showFloatingActionLabel(action.text);
             updateUI();
-            saveGame();
         }
 
         // Buy shop item
         function buyItem(itemName, cost) {
             markInteraction();
-            if (gameState.hearts >= cost) {
-                const item = shopItems[itemName];
-                gameState.hearts -= cost;
-                gameState.stats[item.stat] = Math.min(100, gameState.stats[item.stat] + item.value);
-                if (item.stat === 'food') {
-                    gameState.lastFedAt = Date.now();
-                }
-                addRoomItem(itemName);
-                saveGame();
-                updateUI();
-                showToast(`${item.name} used!`);
-            } else {
+            const item = shopItems[itemName];
+            if (!item || gameState.hearts < cost) {
                 showToast('Not enough hearts!');
+                return;
             }
+            const statUpdate = clampStat((gameState.stats[item.stat] || 0) + item.value);
+            updateState({
+                hearts: gameState.hearts - cost,
+                stats: { ...gameState.stats, [item.stat]: statUpdate },
+                lastFedAt: item.stat === 'food' ? Date.now() : gameState.lastFedAt
+            });
+            addRoomItem(itemName);
+            updateUI();
+            showToast(`${item?.name || 'Item'} used!`);
+            vibrate();
         }
 
         // Show action animation
@@ -2150,11 +2643,12 @@
 
         // Create floating heart
         function createFloatingHeart(e) {
+            const { x, y } = getPointerPosition(e);
             const heart = document.createElement('div');
             heart.className = 'floating-heart';
             heart.innerHTML = '&#10084;';
-            heart.style.left = e.clientX + 'px';
-            heart.style.top = e.clientY + 'px';
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
             heart.style.color = '#FF7AA2';
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 1000);
@@ -2175,13 +2669,14 @@
 
         // Create particles
         function createParticles(e) {
+            const { x, y } = getPointerPosition(e);
             const colors = ['#FF9F5A', '#FF7AA2', '#FFD93D', '#7ED957'];
             for (let i = 0; i < 6; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.innerHTML = '&#10022;';
-                particle.style.left = e.clientX + 'px';
-                particle.style.top = e.clientY + 'px';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
                 particle.style.color = colors[Math.floor(Math.random() * colors.length)];
                 particle.style.fontSize = (12 + Math.random() * 8) + 'px';
                 const angle = (i / 6) * Math.PI * 2;
@@ -2199,6 +2694,15 @@
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function cleanup() {
+            animationController?.clearAll();
+            animationController?.teardown();
+            while (trackedListeners.length) {
+                const off = trackedListeners.pop();
+                try { off(); } catch (e) { console.warn('Failed to remove listener', e); }
+            }
         }
 
         // Start the game
@@ -2226,9 +2730,12 @@
                 setFoodStock,
                 getFoodStock,
                 updateUI,
-                switchSection
+                switchSection,
+                processPendingActions,
+                cleanup
             };
         }
+    })();
     </script>
 </body>
 </html>
