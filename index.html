@@ -190,7 +190,7 @@
         .room-items {
             position: absolute;
             inset: 0;
-            z-index: 5;
+            z-index: 90;
             pointer-events: none;
         }
 
@@ -1389,18 +1389,7 @@
         const MIN_STAT = 0;
         const BORED_MEOW_DELAY_MS = 25000;
         const HAPTIC_SHORT = 30;
-        const MEMORY_SPINNER = `
-            <div class="memory-loader" aria-hidden="true">
-                <div class="memory-heart">
-                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                </div>
-                <div class="memory-paws">
-                    <span class="memory-paw">🐾</span>
-                    <span class="memory-paw">🐾</span>
-                    <span class="memory-paw">🐾</span>
-                </div>
-            </div>
-        `;
+        const MEMORY_SPINNER = `<div class="memory-placeholder" aria-hidden="true">Loading…</div>`;
 
         /**
          * @param {string} label
@@ -1516,6 +1505,11 @@
         function getRoomItemTexture(key) {
             const textureKey = roomItemTextureKeys[key];
             return textureKey ? textures[textureKey] : null;
+        }
+
+        function shouldShowItemInRoom(itemName) {
+            const config = shopItems[itemName];
+            return config ? config.showInRoom !== false : true;
         }
 
         
@@ -1650,9 +1644,9 @@
 
         // Shop items
         const shopItems = Object.freeze({
-            feast: { name: 'Premium Feast', stat: 'food', value: 100 },
-            mouse: { name: 'Orange Ball', stat: 'mood', value: 100 },
-            pillow: { name: 'Cloud Pillow', stat: 'rest', value: 100 }
+            feast: { name: 'Premium Feast', stat: 'food', value: 100, consumable: true, showInRoom: false },
+            mouse: { name: 'Orange Ball', stat: 'mood', value: 100, showInRoom: true },
+            pillow: { name: 'Cloud Pillow', stat: 'rest', value: 100, showInRoom: true }
         });
         window.shopItems = shopItems;
 
@@ -1695,7 +1689,9 @@
             const wrapped = (event) => {
                 if (event.type === 'touchstart') {
                     lastTouch = Date.now();
-                    event.preventDefault();
+                    if (event.target === target) {
+                        event.preventDefault();
+                    }
                 } else if (event.type === 'click' && Date.now() - lastTouch < 250) {
                     return;
                 }
@@ -2308,10 +2304,15 @@
             // FIX: clamp room items count to avoid performance and layering issues
             const current = Array.isArray(gameState.roomItems) ? gameState.roomItems : [];
             const limited = current.slice(0, MAX_ROOM_ITEMS);
-            if (current.length !== limited.length) {
-                updateState({ roomItems: limited });
+            const filtered = limited.filter(item =>
+                item &&
+                shouldShowItemInRoom(item.item) &&
+                getRoomItemTexture(item.item)
+            );
+            if (current.length !== filtered.length || limited.length !== filtered.length) {
+                updateState({ roomItems: filtered });
             }
-            return limited;
+            return filtered;
         }
 
         // Render room items
@@ -2372,6 +2373,10 @@
         function addRoomItem(itemName) {
             // FIX: prevent duplicate placement and cap room items
             const items = getLimitedRoomItems();
+            const texture = getRoomItemTexture(itemName);
+            if (!texture || !shouldShowItemInRoom(itemName)) {
+                return;
+            }
             if (items.length >= MAX_ROOM_ITEMS) {
                 showToast('Room is full! Remove items to add more.');
                 return;
@@ -2392,21 +2397,23 @@
                 const btn = card.querySelector('.shop-btn');
                 const itemId = btn?.dataset.item;
                 if (!btn || !itemId) return;
+                const itemConfig = shopItems[itemId];
+                const consumable = itemConfig?.consumable;
                 if (!btn.dataset.defaultLabel) {
                     btn.dataset.defaultLabel = btn.innerHTML;
                 }
                 const cost = parseInt(btn.dataset.cost, 10);
-                const owned = isItemOwned(itemId);
+                const owned = !consumable && isItemOwned(itemId);
                 card.classList.toggle('owned', owned);
                 btn.classList.toggle('owned', owned);
                 if (owned) {
                     btn.disabled = true;
                     btn.innerHTML = '<span>Owned</span>';
-                    btn.setAttribute('aria-label', `${shopItems[itemId]?.name || itemId} owned`);
+                    btn.setAttribute('aria-label', `${itemConfig?.name || itemId} owned`);
                 } else {
                     btn.innerHTML = btn.dataset.defaultLabel;
                     btn.disabled = Number.isFinite(cost) ? gameState.hearts < cost : false;
-                    btn.setAttribute('aria-label', `${shopItems[itemId]?.name || 'Shop item'} for ${cost} hearts`);
+                    btn.setAttribute('aria-label', `${itemConfig?.name || 'Shop item'} for ${cost} hearts`);
                 }
             });
         }
@@ -2832,7 +2839,8 @@
             markInteraction();
             const item = shopItems[itemName];
             if (!item) return;
-            if (isItemOwned(itemName)) {
+            const consumable = !!item.consumable;
+            if (!consumable && isItemOwned(itemName)) {
                 showToast('Already owned!');
                 renderShopState();
                 return;
@@ -2847,9 +2855,13 @@
                 hearts: gameState.hearts - cost,
                 stats: { ...gameState.stats, [item.stat]: statUpdate },
                 lastFedAt: item.stat === 'food' ? Date.now() : gameState.lastFedAt,
-                ownedItems: Array.from(new Set([...(gameState.ownedItems || []), itemName]))
+                ownedItems: consumable
+                    ? [...(gameState.ownedItems || [])]
+                    : Array.from(new Set([...(gameState.ownedItems || []), itemName]))
             });
-            addRoomItem(itemName);
+            if (item.showInRoom) {
+                addRoomItem(itemName);
+            }
             updateUI();
             showToast(`${item?.name || 'Item'} acquired!`);
             vibrate();
