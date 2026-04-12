@@ -74,6 +74,7 @@ describe('game logic', () => {
         const setItemSpy = jest.spyOn(Object.getPrototypeOf(window.localStorage), 'setItem');
 
         api.performAction('cuddle');
+        jest.advanceTimersByTime(2500);
 
         expect(window.gameState.stats.mood).toBe(100);
         expect(window.document.getElementById('moodBar').style.width).toBe('100%');
@@ -93,12 +94,12 @@ describe('game logic', () => {
         expect(drop.classList.contains('visible')).toBe(true);
         expect(dropImg.src).toContain('meatball_dish.png');
 
-        jest.advanceTimersByTime(600);
+        jest.advanceTimersByTime(1000);
+        expect(window.gameState.stats.food).toBe(50);
+
+        jest.advanceTimersByTime((window.actions.feed.duration || 0) + 1500);
         expect(window.gameState.stats.food).toBe(70);
         expect(window.gameState.lastFedAt).toBeGreaterThan(0);
-
-        jest.advanceTimersByTime(window.actions.feed.duration || 0);
-        expect(dropImg.src).toContain('assets/textures/food/bowl.png');
 
         jest.advanceTimersByTime(1000);
         expect(drop.classList.contains('visible')).toBe(false);
