@@ -324,6 +324,22 @@
             z-index: 100;
         }
 
+        .floating-action-label {
+            position: fixed;
+            left: 50%;
+            transform: translate(-50%, 0);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            color: var(--brown);
+            background: rgba(255,255,255,0.92);
+            padding: 8px 12px;
+            border-radius: 12px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+            animation: actionLabelFloat 1.2s ease-out forwards;
+            pointer-events: none;
+            z-index: 1100;
+        }
+
         @keyframes mollyFloat {
             0%, 100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-6px) scale(1.04); }
@@ -342,6 +358,11 @@
         @keyframes floatUp {
             0% { opacity: 1; transform: translateY(0) scale(1); }
             100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+        }
+
+        @keyframes actionLabelFloat {
+            0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -70px) scale(1.05); }
         }
 
         /* Care Actions */
@@ -453,6 +474,164 @@
             font-family: 'Press Start 2P', cursive;
             font-size: 14px;
             color: var(--brown);
+        }
+
+        /* Food Sheet */
+        .food-sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            z-index: 1000;
+        }
+
+        .food-sheet-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .food-sheet {
+            width: 100%;
+            max-width: 480px;
+            background: var(--cream);
+            border-radius: 18px 18px 0 0;
+            border-top: 4px solid var(--orange);
+            box-shadow: 0 -10px 28px rgba(0,0,0,0.16);
+            padding: 14px 16px 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .food-sheet-overlay.active .food-sheet {
+            transform: translateY(0);
+        }
+
+        .food-sheet-handle {
+            width: 60px;
+            height: 6px;
+            background: var(--cream-dark);
+            border-radius: 999px;
+            margin: 0 auto 14px;
+        }
+
+        .food-section-title,
+        .food-market-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .food-market-section {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .food-card {
+            background: white;
+            border: 3px solid var(--cream-dark);
+            border-radius: 14px;
+            padding: 10px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 6px 0 var(--shadow);
+            text-align: left;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            cursor: pointer;
+        }
+
+        .food-card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .food-card:active {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 var(--shadow);
+        }
+
+        .food-card.market {
+            cursor: default;
+        }
+
+        .food-card img {
+            width: 52px;
+            height: 52px;
+            image-rendering: pixelated;
+            border-radius: 10px;
+            background: var(--cream-dark);
+            padding: 6px;
+        }
+
+        .food-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: var(--brown);
+            line-height: 1.4;
+        }
+
+        .food-stock {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--orange);
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            box-shadow: 0 3px 0 var(--shadow);
+        }
+
+        .food-cost {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: var(--brown);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .food-empty {
+            font-size: 12px;
+            color: var(--text-light);
+            margin: 8px 0 12px;
+            font-weight: 600;
+        }
+
+        .food-market-section.hidden {
+            display: none;
+        }
+
+        .food-card .food-actions {
+            margin-left: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .food-card .shop-btn {
+            min-width: 84px;
+            padding: 10px 12px;
         }
 
         /* Shop Section */
@@ -1025,6 +1204,22 @@
         </div>
     </div>
 
+    <!-- Food Picker Sheet -->
+    <div class="food-sheet-overlay" id="foodSheetOverlay">
+        <div class="food-sheet" id="foodSheet">
+            <div class="food-sheet-handle"></div>
+            <div class="food-section">
+                <div class="food-section-title">INVENTORY</div>
+                <p class="food-empty" id="foodEmptyState">No food in stock — buy some below!</p>
+                <div class="food-grid" id="ownedFoodList"></div>
+            </div>
+            <div class="food-market-section" id="foodMarketSection">
+                <div class="food-market-title">MARKET</div>
+                <div class="food-grid" id="foodMarketList"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Action Animation Overlay -->
     <div class="action-overlay" id="actionOverlay">
         <div class="action-animation">
@@ -1079,27 +1274,17 @@
             ball: 'toy'
         };
 
-        const foodDishTextures = [
-            'assets/textures/food/70_meatball_dish.png',
-            'assets/textures/food/72_nacho_dish.png',
-            'assets/textures/food/76_pudding_dish.png',
-            'assets/textures/food/86_roastedchicken_dish.png',
-            'assets/textures/food/89_salmon_dish.png',
-            'assets/textures/food/96_steak_dish.png',
-            'assets/textures/food/04_bowl.png'
+        const foodItems = [
+            { id: 'bowl',           label: 'Bowl',    cost: 10,  servings: 5, item: 'assets/textures/food/bowl.png',           dish: 'assets/textures/food/bowl.png' },
+            { id: 'meatball',       label: 'Meatball',cost: 20,  servings: 3, item: 'assets/textures/food/meatball.png',       dish: 'assets/textures/food/meatball_dish.png' },
+            { id: 'pudding',        label: 'Pudding', cost: 30,  servings: 3, item: 'assets/textures/food/pudding.png',        dish: 'assets/textures/food/pudding_dish.png' },
+            { id: 'roastedchicken', label: 'Chicken', cost: 40,  servings: 3, item: 'assets/textures/food/roastedchicken.png', dish: 'assets/textures/food/roastedchicken_dish.png' },
+            { id: 'salmon',         label: 'Salmon',  cost: 50,  servings: 3, item: 'assets/textures/food/salmon.png',         dish: 'assets/textures/food/salmon_dish.png' },
+            { id: 'steak',          label: 'Steak',   cost: 60,  servings: 3, item: 'assets/textures/food/steak.png',          dish: 'assets/textures/food/steak_dish.png' },
         ];
+        let foodInventory = {};
+        let selectedFood = null;
         const platePileTexture = 'assets/textures/food/03_dish_pile.png';
-        let availableFoodTextures = [];
-        let foodTextureIndex = 0;
-
-        function registerFoodTexture(url) {
-            if (url && !availableFoodTextures.includes(url)) {
-                availableFoodTextures.push(url);
-            }
-        }
-
-        foodDishTextures.forEach(registerFoodTexture);
-        registerFoodTexture(textures.food);
         textures.foodPile = platePileTexture;
 
         // Room background
@@ -1165,7 +1350,6 @@
             img.onload = () => {
                 textures[textureKey] = url;
                 if (textureKey === 'food') {
-                    availableFoodTextures = [url, ...availableFoodTextures.filter(tex => tex !== url)];
                     setFoodDropTexture();
                 }
                 if (textureKey === 'foodPile') {
@@ -1182,17 +1366,12 @@
             Object.entries(customTextureFiles).forEach(([key, url]) => loadCustomTexture(key, url));
         }
 
-        function getNextFoodTexture() {
-            if (!availableFoodTextures.length) return textures.food;
-            const texture = availableFoodTextures[foodTextureIndex % availableFoodTextures.length];
-            foodTextureIndex = (foodTextureIndex + 1) % availableFoodTextures.length;
-            return texture;
-        }
-
         function setFoodDropTexture() {
             const dropImg = document.getElementById('foodDropImg');
             if (dropImg) {
-                dropImg.src = getNextFoodTexture();
+                const fallbackDish = foodItems[0]?.dish || textures.food;
+                const texture = selectedFood?.dish || fallbackDish || textures.food;
+                dropImg.src = texture;
                 dropImg.onerror = () => {
                     dropImg.onerror = null;
                     dropImg.src = textures.food;
@@ -1216,9 +1395,12 @@
                 0, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500,
                 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000
             ],
-            roomItems: []
+            roomItems: [],
+            foodInventory: {}
         };
         window.gameState = gameState;
+        window.foodInventory = foodInventory;
+        foodInventory = gameState.foodInventory;
 
         // Session-only unlock flag for the secret code
         let codeUnlockActive = false;
@@ -1256,6 +1438,7 @@
             bathe: { icon: 'bathe', text: 'Molly is sparkling clean!', life: 15, gif: 'stand' }
         };
         window.actions = actions;
+        window.foodItems = foodItems;
 
         // Shop items
         const shopItems = {
@@ -1305,7 +1488,12 @@
         // Load game from localStorage
         function loadGame() {
             codeUnlockActive = false;
-            const saved = localStorage.getItem('mollyGame');
+            let userId = localStorage.getItem('mollyUserId');
+            if (!userId) {
+                userId = crypto.randomUUID();
+                localStorage.setItem('mollyUserId', userId);
+            }
+            const saved = localStorage.getItem(`mollyGame_${userId}`);
             if (saved) {
                 const parsed = JSON.parse(saved);
                 gameState.hearts = parsed.hearts || 0;
@@ -1314,13 +1502,23 @@
                 gameState.lastFedAt = parsed.lastFedAt || parsed.lastUpdate || gameState.lastUpdate;
                 gameState.unlockedMemories = parsed.unlockedMemories || [0];
                 gameState.roomItems = parsed.roomItems || [];
+                gameState.foodInventory = parsed.foodInventory || {};
+            } else {
+                gameState.foodInventory = {};
             }
+            foodInventory = gameState.foodInventory;
+            window.foodInventory = foodInventory;
         }
 
         // Save game to localStorage
         function saveGame() {
+            let userId = localStorage.getItem('mollyUserId');
+            if (!userId) {
+                userId = crypto.randomUUID();
+                localStorage.setItem('mollyUserId', userId);
+            }
             gameState.lastUpdate = Date.now();
-            localStorage.setItem('mollyGame', JSON.stringify(gameState));
+            localStorage.setItem(`mollyGame_${userId}`, JSON.stringify(gameState));
         }
 
         // Apply offline stat decay
@@ -1513,7 +1711,8 @@
                 sprite.className = 'room-item';
                 sprite.style.left = `${item.x || 50}%`;
                 sprite.style.top = `${item.y || 70}%`;
-                sprite.style.zIndex = String(3 + idx);
+                const isFloorToy = item.item === 'ball' || item.item === 'mouse';
+                sprite.style.zIndex = isFloorToy ? '9' : String(3 + idx);
                 layer.appendChild(sprite);
             });
         }
@@ -1571,7 +1770,7 @@
             });
         }
 
-        function showFoodDrop(duration = 2000) {
+        function showFoodDrop() {
             const drop = document.getElementById('foodDrop');
             if (!drop) return;
             setFoodDropTexture();
@@ -1579,7 +1778,161 @@
             // restart animation
             void drop.offsetWidth;
             drop.classList.add('visible');
-            setTimeout(() => drop.classList.remove('visible'), Math.min(duration, 4000));
+        }
+
+        function hideFoodDrop() {
+            const drop = document.getElementById('foodDrop');
+            if (!drop) return;
+            drop.classList.remove('visible');
+        }
+
+        function getFoodStock(foodId) {
+            return foodInventory[foodId] || 0;
+        }
+
+        function setFoodStock(foodId, count) {
+            if (count > 0) {
+                foodInventory[foodId] = count;
+            } else {
+                delete foodInventory[foodId];
+            }
+            gameState.foodInventory = foodInventory;
+            window.foodInventory = foodInventory;
+        }
+
+        function renderFoodSheet() {
+            const ownedList = document.getElementById('ownedFoodList');
+            const marketList = document.getElementById('foodMarketList');
+            const emptyState = document.getElementById('foodEmptyState');
+            const marketSection = document.getElementById('foodMarketSection');
+            if (!ownedList || !marketList) return;
+
+            ownedList.innerHTML = '';
+            marketList.innerHTML = '';
+
+            const ownedFoods = foodItems.filter(item => getFoodStock(item.id) > 0);
+            const marketFoods = foodItems.filter(item => getFoodStock(item.id) <= 0);
+
+            if (emptyState) {
+                emptyState.style.display = ownedFoods.length ? 'none' : 'block';
+            }
+
+            ownedFoods.forEach(food => {
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = 'food-card';
+                card.innerHTML = `
+                    <img src="${food.item}" alt="${food.label}">
+                    <div class="food-card-info">
+                        <div class="food-label">${food.label}</div>
+                    </div>
+                    <div class="food-stock">x${getFoodStock(food.id)}</div>
+                `;
+                card.addEventListener('click', () => selectFoodToFeed(food));
+                ownedList.appendChild(card);
+            });
+
+            if (marketSection) {
+                marketSection.classList.toggle('hidden', marketFoods.length === 0);
+            }
+
+            marketFoods.forEach(food => {
+                const card = document.createElement('div');
+                card.className = 'food-card market';
+                card.innerHTML = `
+                    <img src="${food.item}" alt="${food.label}">
+                    <div class="food-card-info">
+                        <div class="food-label">${food.label}</div>
+                        <div class="food-cost">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="#FF7AA2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            <span>${food.cost}</span>
+                        </div>
+                    </div>
+                    <div class="food-actions">
+                        <button class="shop-btn buy-food-btn" type="button">
+                            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            <span>Buy</span>
+                        </button>
+                    </div>
+                `;
+                card.querySelector('.buy-food-btn')?.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    purchaseFood(food);
+                });
+                marketList.appendChild(card);
+            });
+        }
+
+        function openFoodSheet() {
+            renderFoodSheet();
+            const overlay = document.getElementById('foodSheetOverlay');
+            if (overlay) {
+                overlay.classList.add('active');
+            }
+        }
+
+        function closeFoodSheet() {
+            const overlay = document.getElementById('foodSheetOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+        }
+
+        function purchaseFood(food) {
+            markInteraction();
+            if (gameState.hearts < food.cost) {
+                showToast('Not enough hearts!');
+                return;
+            }
+            gameState.hearts -= food.cost;
+            setFoodStock(food.id, getFoodStock(food.id) + food.servings);
+            saveGame();
+            updateUI();
+            renderFoodSheet();
+        }
+
+        function selectFoodToFeed(food) {
+            if (getFoodStock(food.id) <= 0) return;
+            setFoodStock(food.id, getFoodStock(food.id) - 1);
+            selectedFood = food;
+            saveGame();
+            updateUI();
+            closeFoodSheet();
+            startFeedingSequence(food);
+        }
+
+        function startFeedingSequence(food) {
+            if (!food) return;
+            const action = actions.feed;
+            const duration = action.duration || 3000;
+            selectedFood = food;
+            markInteraction();
+            setFoodDropTexture();
+            showFoodDrop();
+
+            setTimeout(() => {
+                applyActionEffects(action);
+                gameState.lastFedAt = Date.now();
+                setMollyAnimation(action.gif, duration);
+                showFloatingActionLabel(action.text);
+                updateUI();
+                saveGame();
+
+                setTimeout(() => {
+                    const dropImg = document.getElementById('foodDropImg');
+                    if (dropImg) {
+                        dropImg.onerror = () => {
+                            dropImg.onerror = null;
+                            dropImg.src = textures.food;
+                        };
+                        dropImg.src = 'assets/textures/food/bowl.png';
+                    }
+                    setTimeout(() => {
+                        hideFoodDrop();
+                        selectedFood = null;
+                    }, 1000);
+                }, duration);
+            }, 600);
         }
 
         // Unlock memory
@@ -1672,6 +2025,16 @@
                 });
             });
 
+            const foodOverlay = document.getElementById('foodSheetOverlay');
+            if (foodOverlay) {
+                foodOverlay.addEventListener('click', (event) => {
+                    if (event.target === foodOverlay) {
+                        closeFoodSheet();
+                        document.querySelectorAll('.care-btn').forEach(b => b.classList.remove('active-action'));
+                    }
+                });
+            }
+
             // Shop items
             document.querySelectorAll('.shop-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1690,29 +2053,27 @@
             document.getElementById(section + 'Section').classList.add('active');
         }
 
-        // Perform care action
-        function performAction(actionName) {
-            const action = actions[actionName];
+        function applyActionEffects(action) {
             if (!action) return;
-            markInteraction();
-            const duration = action.duration || 3000;
-
-            // Apply effects
             if (action.food) gameState.stats.food = Math.min(100, gameState.stats.food + action.food);
             if (action.mood) gameState.stats.mood = Math.min(100, gameState.stats.mood + action.mood);
             if (action.rest) gameState.stats.rest = Math.min(100, gameState.stats.rest + action.rest);
             if (action.life) gameState.stats.life = Math.min(100, gameState.stats.life + action.life);
+        }
+
+        // Perform care action
+        function performAction(actionName) {
+            const action = actions[actionName];
+            if (!action) return;
             if (actionName === 'feed') {
-                gameState.lastFedAt = Date.now();
-                showFoodDrop(duration);
+                openFoodSheet();
+                return;
             }
-
-            // Change Molly's animation
+            markInteraction();
+            const duration = action.duration || 3000;
+            applyActionEffects(action);
             setMollyAnimation(action.gif, duration);
-
-            // Show animation overlay
-            showActionAnimation(action);
-
+            showFloatingActionLabel(action.text);
             updateUI();
             saveGame();
         }
@@ -1763,6 +2124,19 @@
             setTimeout(() => heart.remove(), 1000);
         }
 
+        function showFloatingActionLabel(text) {
+            const mollyCircle = document.getElementById('mollyCircle');
+            if (!mollyCircle) return;
+            const rect = mollyCircle.getBoundingClientRect();
+            const label = document.createElement('div');
+            label.className = 'floating-action-label';
+            label.textContent = text;
+            label.style.left = `${rect.left + rect.width / 2}px`;
+            label.style.top = `${rect.top - 12}px`;
+            document.body.appendChild(label);
+            setTimeout(() => label.remove(), 1200);
+        }
+
         // Create particles
         function createParticles(e) {
             const colors = ['#FF9F5A', '#FF7AA2', '#FFD93D', '#7ED957'];
@@ -1807,6 +2181,14 @@
                 handleMemoryCodeSubmit,
                 renderMemories,
                 renderRoomItems,
+                renderFoodSheet,
+                openFoodSheet,
+                closeFoodSheet,
+                purchaseFood,
+                selectFoodToFeed,
+                startFeedingSequence,
+                setFoodStock,
+                getFoodStock,
                 updateUI,
                 switchSection
             };

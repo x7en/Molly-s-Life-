@@ -38,10 +38,12 @@ describe('game logic', () => {
             stats: { food: 10, mood: 20, rest: 30, life: 40 },
             lastUpdate: 12345,
             unlockedMemories: [0, 2],
-            roomItems: [{ item: 'mouse', x: 10, y: 20 }]
+            roomItems: [{ item: 'mouse', x: 10, y: 20 }],
+            foodInventory: { bowl: 2 }
         };
 
-        window.localStorage.setItem('mollyGame', JSON.stringify(saved));
+        window.localStorage.setItem('mollyUserId', 'test-user');
+        window.localStorage.setItem('mollyGame_test-user', JSON.stringify(saved));
         api.loadGame();
 
         expect(window.gameState.hearts).toBe(5);
@@ -49,6 +51,8 @@ describe('game logic', () => {
         expect(window.gameState.lastUpdate).toBe(12345);
         expect(window.gameState.unlockedMemories).toEqual([0, 2]);
         expect(window.gameState.roomItems).toEqual(saved.roomItems);
+        expect(window.gameState.foodInventory).toEqual(saved.foodInventory);
+        expect(window.foodInventory.bowl).toBe(2);
     });
 
     test('applyOfflineDecay reduces stats over elapsed minutes', () => {
@@ -66,14 +70,48 @@ describe('game logic', () => {
     });
 
     test('performAction caps stats and saves state', () => {
-        window.gameState.stats = { food: 95, mood: 50, rest: 50, life: 50 };
+        window.gameState.stats = { food: 50, mood: 95, rest: 50, life: 50 };
         const setItemSpy = jest.spyOn(Object.getPrototypeOf(window.localStorage), 'setItem');
 
-        api.performAction('feed');
+        api.performAction('cuddle');
 
-        expect(window.gameState.stats.food).toBe(100);
-        expect(window.document.getElementById('foodBar').style.width).toBe('100%');
+        expect(window.gameState.stats.mood).toBe(100);
+        expect(window.document.getElementById('moodBar').style.width).toBe('100%');
         expect(setItemSpy).toHaveBeenCalled();
+    });
+
+    test('selectFoodToFeed consumes inventory and follows the feeding sequence', () => {
+        const food = window.foodItems.find((item) => item.id === 'meatball');
+        api.setFoodStock(food.id, 1);
+        window.gameState.stats.food = 50;
+
+        api.selectFoodToFeed(food);
+
+        expect(api.getFoodStock(food.id)).toBe(0);
+        const drop = document.getElementById('foodDrop');
+        const dropImg = document.getElementById('foodDropImg');
+        expect(drop.classList.contains('visible')).toBe(true);
+        expect(dropImg.src).toContain('meatball_dish.png');
+
+        jest.advanceTimersByTime(600);
+        expect(window.gameState.stats.food).toBe(70);
+        expect(window.gameState.lastFedAt).toBeGreaterThan(0);
+
+        jest.advanceTimersByTime(window.actions.feed.duration || 0);
+        expect(dropImg.src).toContain('assets/textures/food/bowl.png');
+
+        jest.advanceTimersByTime(1000);
+        expect(dropImg.classList.contains('visible')).toBe(false);
+    });
+
+    test('purchaseFood deducts hearts and adds servings', () => {
+        const food = window.foodItems.find((item) => item.id === 'bowl');
+        window.gameState.hearts = 50;
+
+        api.purchaseFood(food);
+
+        expect(window.gameState.hearts).toBe(40);
+        expect(api.getFoodStock(food.id)).toBe(food.servings);
     });
 
     test('buyItem spends hearts, boosts stats, and adds room item', () => {
