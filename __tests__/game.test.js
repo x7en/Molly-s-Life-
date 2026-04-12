@@ -69,6 +69,8 @@ describe('game logic', () => {
 
         expect(window.gameState.unlockedMemories).toEqual([0]);
         expect(window.gameState.pendingActions).toEqual([]);
+        expect(window.gameState.hearts).toBe(3);
+        expect(window.gameState.stats).toEqual(saved.stats);
     });
 
     test('loadGame filters unlocked memories to valid unique indices', () => {

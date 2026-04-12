@@ -1919,7 +1919,9 @@
         }
 
         function sanitizeUnlockedMemories(value, totalSlots) {
-            const maxSlots = Number.isFinite(totalSlots) ? totalSlots : DEFAULT_MEMORY_COSTS.length;
+            const maxSlots = (Number.isInteger(totalSlots) && totalSlots > 0)
+                ? totalSlots
+                : DEFAULT_MEMORY_COSTS.length;
             const incoming = Array.isArray(value) ? value : [];
             const cleaned = [];
             incoming.forEach((entry) => {
@@ -1935,7 +1937,12 @@
 
         function sanitizePendingActions(value) {
             if (!Array.isArray(value)) return [];
-            return value.filter(action => action && typeof action === 'object' && typeof action.id === 'string' && action.type);
+            return value.filter(action =>
+                action &&
+                typeof action === 'object' &&
+                typeof action.id === 'string' &&
+                typeof action.type === 'string'
+            );
         }
 
         function sanitizeFoodInventory(value) {
