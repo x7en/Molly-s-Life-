@@ -1389,7 +1389,12 @@
         const MIN_STAT = 0;
         const BORED_MEOW_DELAY_MS = 25000;
         const HAPTIC_SHORT = 30;
-        const MEMORY_SPINNER = `<div class="memory-placeholder" aria-hidden="true">Loading…</div>`;
+        const MEMORY_SPINNER = `
+            <div class="memory-loader" role="status" aria-live="polite" aria-label="Loading memories">
+                <div class="memory-heart" aria-hidden="true">♥</div>
+                <div class="memory-paws" aria-hidden="true"><span class="memory-paw">🐾</span><span class="memory-paw">🐾</span><span class="memory-paw">🐾</span></div>
+                <div class="memory-placeholder">Loading…</div>
+            </div>`;
 
         /**
          * @param {string} label
@@ -1689,10 +1694,8 @@
             const wrapped = (event) => {
                 if (event.type === 'touchstart') {
                     lastTouch = Date.now();
-                    if (event.target === target) {
-                        event.preventDefault();
-                    }
-                } else if (event.type === 'click' && Date.now() - lastTouch < 250) {
+                    event.preventDefault();
+                } else if (event.type === 'click' && Date.now() - lastTouch < 350) {
                     return;
                 }
                 handler(event);
@@ -2301,18 +2304,19 @@
         }
 
         function getLimitedRoomItems() {
-            // FIX: clamp room items count to avoid performance and layering issues
+            // FIX: filter invalid/hidden items first, then cap to MAX_ROOM_ITEMS
+            // so valid items beyond the first MAX aren't permanently lost
             const current = Array.isArray(gameState.roomItems) ? gameState.roomItems : [];
-            const limited = current.slice(0, MAX_ROOM_ITEMS);
-            const filtered = limited.filter(item =>
+            const filtered = current.filter(item =>
                 item &&
                 shouldShowItemInRoom(item.item) &&
                 getRoomItemTexture(item.item)
             );
-            if (current.length !== filtered.length || limited.length !== filtered.length) {
-                updateState({ roomItems: filtered });
+            const limited = filtered.slice(0, MAX_ROOM_ITEMS);
+            if (current.length !== limited.length) {
+                updateState({ roomItems: limited });
             }
-            return filtered;
+            return limited;
         }
 
         // Render room items
