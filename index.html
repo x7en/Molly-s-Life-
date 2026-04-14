@@ -1449,7 +1449,7 @@
             return Math.min(MAX_STAT, Math.max(MIN_STAT, value));
         }
 
-        // GIF Data URLs (valid placeholders; external files preferred)
+        // GIF file URLs for external animation assets; data URLs may be used only as fallbacks/placeholders if needed.
         const gifUrls = {
             idle: 'assets/animations/idle-animation.gif',
             sleep: 'assets/animations/sleep-animation.gif',
