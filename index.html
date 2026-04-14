@@ -428,6 +428,7 @@
         .care-btn svg {
             width: 32px;
             height: 32px;
+            pointer-events: none;
         }
 
         .care-btn.cuddle svg { fill: var(--pink); }
@@ -1450,14 +1451,14 @@
 
         // GIF Data URLs (valid placeholders; external files preferred)
         const gifUrls = {
-            idle: TRANSPARENT_GIF,
-            sleep: TRANSPARENT_GIF,
-            walk: TRANSPARENT_GIF,
-            play: TRANSPARENT_GIF,
-            eat: TRANSPARENT_GIF,
-            meow: TRANSPARENT_GIF,
-            stand: TRANSPARENT_GIF,
-            loading: TRANSPARENT_GIF
+            idle: 'assets/animations/idle-animation.gif',
+            sleep: 'assets/animations/sleep-animation.gif',
+            walk: 'assets/animations/walk-animation.gif',
+            play: 'assets/animations/play-animation.gif',
+            eat: 'assets/animations/eat-animation.gif',
+            meow: 'assets/animations/meow-animation.gif',
+            stand: 'assets/animations/stand-animation.gif',
+            loading: 'assets/animations/loading.gif'
         };
 
         const animationKeys = Array.from(new Set(Object.keys(gifUrls)));
@@ -1530,14 +1531,18 @@
             const mollyGif = document.getElementById('mollyGif');
             if (!mollyGif) return;
 
-            const fallback = gifUrls[gifName] || gifUrls.idle || PLACEHOLDER_IMG;
-            const candidates = animationFileCandidates[gifName] || [];
+            const candidates = Array.from(new Set([
+                ...(animationFileCandidates[gifName] || []),
+                gifUrls[gifName],
+                gifUrls.idle
+            ].filter(Boolean)));
+            const fallback = gifUrls.idle || PLACEHOLDER_IMG;
             mollyGif.dataset.fallback = fallback;
             if (!candidates.length) {
                 mollyGif.src = fallback;
                 return;
             }
-            loadImageWithFallback(mollyGif, candidates, fallback);
+            loadImageWithFallback(mollyGif, candidates, fallback || TRANSPARENT_GIF);
         }
 
         function loadCustomTexture(textureKey, url) {
@@ -1580,12 +1585,16 @@
 
         function setFoodDropTexture() {
             const dropImg = document.getElementById('foodDropImg');
-            if (dropImg) {
-                const fallbackDish = foodItems[0]?.dish || textures.food || FOOD_EMOJI_FALLBACK;
-                const texture = selectedFood?.dish || fallbackDish || FOOD_EMOJI_FALLBACK;
-                const candidates = [texture, fallbackDish, textures.food].filter(Boolean);
-                setFoodDropImage(candidates);
+            if (!dropImg) return;
+            if (!selectedFood) {
+                dropImg.style.opacity = '0';
+                return;
             }
+            dropImg.style.opacity = '1';
+            const fallbackDish = foodItems[0]?.dish || textures.food || FOOD_EMOJI_FALLBACK;
+            const texture = selectedFood?.dish || fallbackDish || FOOD_EMOJI_FALLBACK;
+            const candidates = [texture, fallbackDish, textures.food].filter(Boolean);
+            setFoodDropImage(candidates);
         }
 
         // Game State
@@ -1894,7 +1903,15 @@
         // Initialize
         function init() {
             // Set background images
-            document.getElementById('roomBg').src = roomBgUrl;
+            const roomBg = document.getElementById('roomBg');
+            if (roomBg) {
+                roomBg.onerror = () => {
+                    roomBg.onerror = null;
+                    roomBg.style.background = 'linear-gradient(180deg, #E8DCC4 0%, #D4C4A8 100%)';
+                    roomBg.removeAttribute('src');
+                };
+                roomBg.src = roomBgUrl;
+            }
             setMollyGifSource('idle');
             setFoodDropTexture();
             loadCustomTextures();
@@ -2578,6 +2595,8 @@
             renderFoodSheet();
             const overlay = document.getElementById('foodSheetOverlay');
             if (overlay) {
+                overlay.style.display = 'flex';
+                void overlay.offsetHeight;
                 overlay.classList.add('active');
                 if (!foodSheetOpen) {
                     try {
@@ -2667,6 +2686,7 @@
                 animationController.setTimeout(() => {
                     hideFoodDrop();
                     selectedFood = null;
+                    setFoodDropTexture();
                     feedingLock = false;
                     toggleFeedButtonDisabled(false);
                     completePendingAction(pendingId);
@@ -2751,7 +2771,9 @@
             const careGrid = document.querySelector('.care-grid');
             addPressListener(careGrid, (event) => {
                 const btn = event.target.closest('.care-btn');
-                if (!btn || btn.disabled) return;
+                if (!btn) return;
+                const isDisabled = btn.disabled || btn.classList.contains('disabled');
+                if (isDisabled) return;
                 document.querySelectorAll('.care-btn').forEach(b => b.classList.remove('active-action'));
                 btn.classList.add('active-action');
                 performAction(btn.dataset.action);
