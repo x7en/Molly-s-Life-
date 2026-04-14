@@ -1536,13 +1536,15 @@
                 gifUrls[gifName],
                 gifUrls.idle
             ].filter(Boolean)));
-            const fallback = gifUrls.idle || PLACEHOLDER_IMG;
+            // Use a guaranteed inline placeholder as fallback so a missing assets
+            // folder never leaves a broken image; external URLs remain candidates only.
+            const fallback = TRANSPARENT_GIF;
             mollyGif.dataset.fallback = fallback;
             if (!candidates.length) {
                 mollyGif.src = fallback;
                 return;
             }
-            loadImageWithFallback(mollyGif, candidates, fallback || TRANSPARENT_GIF);
+            loadImageWithFallback(mollyGif, candidates, fallback);
         }
 
         function loadCustomTexture(textureKey, url) {
