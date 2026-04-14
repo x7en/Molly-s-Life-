@@ -6,6 +6,7 @@ Custom animations
 - Place Molly GIFs in `assets/animations/`.
 - Name each file after the animation key (for example: `idle.gif`, `play.gif`, `sleep.gif`, `walk.gif`, `stand.gif`, `eat.gif`, `meow.gif`).
 - Files ending with `-animation.gif` are also detected automatically (for example: `eat-animation.gif`).
+- Update `loading.gif` in the same folder to change the loader shown while memory images resolve.
 - If a matching GIF exists, the game will use it; otherwise it falls back to the built-in animation.
 
 Custom textures

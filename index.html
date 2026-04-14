@@ -953,6 +953,14 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            flex-direction: column;
+        }
+
+        .memory-loader-gif {
+            width: 82px;
+            height: 82px;
+            image-rendering: pixelated;
+            background: url('assets/animations/loading.gif') center/contain no-repeat;
         }
 
         .memory-heart {
@@ -1391,8 +1399,7 @@
         const HAPTIC_SHORT = 30;
         const MEMORY_SPINNER = `
             <div class="memory-loader" role="status" aria-label="Loading memories">
-                <div class="memory-heart" aria-hidden="true">♥</div>
-                <div class="memory-paws" aria-hidden="true"><span class="memory-paw">🐾</span><span class="memory-paw">🐾</span><span class="memory-paw">🐾</span></div>
+                <div class="memory-loader-gif" aria-hidden="true"></div>
                 <div class="memory-placeholder">Loading…</div>
             </div>`;
 
@@ -1449,7 +1456,8 @@
             play: TRANSPARENT_GIF,
             eat: TRANSPARENT_GIF,
             meow: TRANSPARENT_GIF,
-            stand: TRANSPARENT_GIF
+            stand: TRANSPARENT_GIF,
+            loading: TRANSPARENT_GIF
         };
 
         const animationKeys = Array.from(new Set(Object.keys(gifUrls)));
