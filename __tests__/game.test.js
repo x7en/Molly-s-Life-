@@ -159,6 +159,17 @@ describe('game logic', () => {
         expect(window.gameState.roomItems[0].item).toBe('mouse');
     });
 
+    test('feast boosts food without adding a room item', () => {
+        window.gameState.hearts = 150;
+        window.gameState.stats.food = 10;
+
+        api.buyItem('feast', 100);
+
+        expect(window.gameState.hearts).toBe(50);
+        expect(window.gameState.stats.food).toBe(100);
+        expect(window.gameState.roomItems).toHaveLength(0);
+    });
+
     test('unlockMemory requires sufficient hearts', () => {
         const toast = window.document.getElementById('toast');
 
