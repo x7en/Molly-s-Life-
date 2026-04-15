@@ -2783,7 +2783,7 @@
 
             const foodOverlay = document.getElementById('foodSheetOverlay');
             if (foodOverlay) {
-                addPressListener(foodOverlay, (event) => {
+                addTrackedListener(foodOverlay, 'click', (event) => {
                     if (event.target === foodOverlay) {
                         closeFoodSheet();
                         document.querySelectorAll('.care-btn').forEach(b => b.classList.remove('active-action'));
